@@ -1,615 +1,96 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="fr">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>The Ultimate Guide to Buying a Rolex — Luxury • Precision • Timelessness</title>
-  <meta name="description" content="Luxury single-page portfolio for the ultimate Rolex buying guide: legacy, innovations, characteristics, movements, case, bracelets, materials, technical specs, dials, collections, investment." />
+  <title>Rolex Guide — Entrée</title>
   <meta name="theme-color" content="#0b0b0e" />
   <style>
     :root{
-      --bg:#0a0a0d; --bg-soft:#0f0f15; --bg-elev:#13131b;
-      --panel:#111118; --text:#ececf3; --muted:#b9b9c6;
+      --bg:#0a0a0d; --bg-soft:#0f0f15; --panel:#111118;
+      --text:#ececf3; --muted:#b9b9c6;
       --gold:#d4af37; --gold-2:#e0c46c; --ring:rgba(212,175,55,.25);
       --shadow:0 10px 30px rgba(0,0,0,.5), 0 2px 8px rgba(0,0,0,.35);
-      --radius:18px; --radius-lg:28px; --radius-sm:12px; --maxw:1200px;
+      --radius:18px;
     }
     *{box-sizing:border-box}
-    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Inter,"Helvetica Neue",Arial,"Noto Sans"}
-    body{line-height:1.6}
-    img{max-width:100%;display:block}
-    a{color:inherit;text-decoration:none}
-    h1,h2,h3,h4{margin:0 0 .6rem 0;line-height:1.15}
-    p{margin:.5rem 0 1rem 0}
-
-    /* Gold styling */
-    .gold{background:linear-gradient(135deg,var(--gold),var(--gold-2));-webkit-background-clip:text;background-clip:text;color:transparent}
-    .gold-hr{height:1px;border:0;background:linear-gradient(90deg,transparent,var(--gold) 40%,var(--gold-2) 60%,transparent)}
-    .ring{box-shadow:0 0 0 1px var(--ring), inset 0 0 0 1px rgba(255,255,255,.02)}
-
-    /* Layout */
-    .container{max-width:var(--maxw);margin:0 auto;padding:0 24px}
-    .grid{display:grid;gap:24px}
-    .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
-    .grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
-    @media (max-width:980px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}}
-    section{padding:80px 0;position:relative}
-    .section-title{font-size:36px;text-align:center;margin-bottom:12px}
-    .section-sub{color:var(--muted);text-align:center;margin-bottom:28px}
-
-    /* Cards */
-    .card{background:linear-gradient(180deg,var(--panel),#0d0d12);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px}
-    .card h3{font-size:22px}
-
-    /* NAV */
-    .progress{position:fixed;inset:0 0 auto 0;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold-2));transform-origin:0 50%;transform:scaleX(0);z-index:70}
-    .nav{position:sticky;top:0;z-index:60;background:linear-gradient(180deg,rgba(10,10,13,.95),rgba(10,10,13,.7) 70%, transparent);backdrop-filter:blur(8px);border-bottom:1px solid rgba(212,175,55,.08)}
-    .nav-inner{display:flex;align-items:center;justify-content:space-between;height:72px}
-    .brand{display:flex;align-items:center;gap:12px}
-    .brand-logo{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 30% 30%, #fff8, #fff0 40%), conic-gradient(from 0deg, var(--gold), var(--gold-2));box-shadow:0 0 0 2px rgba(212,175,55,.35), 0 10px 30px rgba(212,175,55,.2)}
-    .brand-logo svg{width:22px;height:22px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.5))}
-    .brand h1{font-size:18px;letter-spacing:.12em;font-weight:700}
-    .nav-links{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-    .nav a{opacity:.85;padding:6px 10px;border-radius:999px}
-    .nav a:hover{opacity:1;background:rgba(255,255,255,.04)}
-    .cta{padding:10px 16px;border-radius:999px;background:linear-gradient(135deg,rgba(212,175,55,.15),rgba(224,196,108,.1));border:1px solid rgba(212,175,55,.35);transition:transform .2s ease}
-    .cta:hover{transform:translateY(-2px)}
-
-    /* HERO */
-    .hero{position:relative;padding:100px 0 80px;background:
-      radial-gradient(1200px 600px at 70% -20%, rgba(212,175,55,.12), transparent 60%),
-      radial-gradient(900px 500px at 0% 0%, rgba(224,196,108,.08), transparent 60%),
-      linear-gradient(180deg,var(--bg),var(--bg-soft));overflow:hidden}
-    .parallax{position:absolute;inset:0;pointer-events:none;background:
-      radial-gradient(1000px 500px at 0% 0%, rgba(224,196,108,.06), transparent 60%),
-      radial-gradient(900px 500px at 100% 20%, rgba(212,175,55,.08), transparent 60%)}
-    .hero .container{display:grid;grid-template-columns:1.2fr .8fr;gap:32px;align-items:center}
-    @media (max-width:980px){.hero .container{grid-template-columns:1fr;gap:36px}}
-    .hero-badge{display:inline-flex;gap:10px;align-items:center;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.03);border:1px solid rgba(212,175,55,.25);font-size:12px;letter-spacing:.12em}
-    .hero h2{font-size:52px}
-    .hero p{color:var(--muted)}
-    .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
-    .btn{padding:12px 18px;border-radius:999px;border:1px solid rgba(212,175,55,.35);background:linear-gradient(135deg,rgba(212,175,55,.16),rgba(224,196,108,.08));cursor:pointer}
-    .btn.secondary{background:rgba(255,255,255,.03);border-color:rgba(212,175,55,.18)}
-
-    /* Watch mock */
-    .watch-card{position:relative;border-radius:var(--radius-lg);background:linear-gradient(180deg,#0b0b10,#0e0e14);box-shadow:var(--shadow);padding:24px;overflow:hidden}
-    .watch-face{aspect-ratio:4/5;border-radius:var(--radius);background:
-      radial-gradient(160px 80px at 40% 30%, rgba(255,255,255,.15), transparent 40%),
-      radial-gradient(160px 80px at 70% 10%, rgba(255,255,255,.08), transparent 40%),
-      linear-gradient(135deg, #0d0d12 30%, #111118 70%); border:1px solid rgba(212,175,55,.2);position:relative}
-    .watch-bezel{position:absolute;inset:8px;border-radius:inherit;border:2px solid rgba(212,175,55,.35);box-shadow:inset 0 0 40px rgba(212,175,55,.2)}
-    .watch-hands::before,.watch-hands::after{content:"";position:absolute;left:50%;top:50%;transform-origin:0 0;background:var(--gold)}
-    .watch-hands::before{width:36%;height:2px;transform:rotate(20deg)}
-    .watch-hands::after{width:28%;height:3px;transform:rotate(130deg)}
-    .watch-markers{position:absolute;inset:0;display:grid;place-items:center}
-    .watch-markers::before{content:"";width:70%;height:70%;border-radius:50%;border:1px dashed rgba(212,175,55,.25)}
-
-    /* HERO PNG image (replacement) */
-    .hero-watch-img{
-      width:100%;
-      height:auto;
-      display:block;
-      border-radius:var(--radius);
-      border:1px solid rgba(212,175,55,.2);
-      box-shadow: inset 0 0 40px rgba(212,175,55,.08);
-      object-fit:cover;
+    html,body{height:100%;margin:0}
+    body{
+      font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Inter,"Helvetica Neue",Arial,"Noto Sans";
+      background:
+        radial-gradient(1200px 600px at 70% -20%, rgba(212,175,55,.12), transparent 60%),
+        radial-gradient(900px 500px at 0% 0%, rgba(224,196,108,.08), transparent 60%),
+        linear-gradient(180deg,var(--bg),var(--bg-soft));
+      color:var(--text);
+      display:grid;
+      place-items:center;
+      padding:24px;
     }
-
-    /* Features */
-    .feature{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:center}
-    .feature:nth-child(even){direction:rtl}.feature:nth-child(even) .feature-body{direction:ltr}
-    .feature-media{border-radius:var(--radius-lg);background:linear-gradient(145deg,#0c0c10,#14141c);border:1px solid rgba(212,175,55,.25);padding:0;position:relative;overflow:hidden}
-    .figure{border-radius:16px;overflow:hidden;border:1px solid rgba(212,175,55,.25);background:#0c0c10}
-    .figure img{display:block;width:100%;height:auto;transform:scale(1);transition:transform .6s ease, filter .6s ease}
-    .figure:hover img{transform:scale(1.035);filter:brightness(1.02)}
-
-    /* Timeline */
-    .timeline{position:relative;margin:40px 0}
-    .timeline::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;background:linear-gradient(180deg,transparent,var(--gold),transparent)}
-    .tl-item{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:24px 0}
-    .tl-item .dot{position:absolute;left:calc(50% - 8px);top:8px;width:16px;height:16px;border-radius:50%;background:radial-gradient(circle at 40% 40%, #fff6, #0000 40%), linear-gradient(135deg,var(--gold),var(--gold-2));box-shadow:0 0 0 3px rgba(212,175,55,.22)}
-    .tl-card{background:linear-gradient(180deg,#0e0e12,#111118);border:1px solid rgba(212,175,55,.2);border-radius:16px;padding:16px 18px}
-    @media (max-width:980px){.tl-item{grid-template-columns:1fr}.timeline::before{left:18px}.tl-item .dot{left:10px}}
-
-    /* Accordeon */
-    .accordion{border-radius:var(--radius);overflow:hidden;border:1px solid rgba(212,175,55,.2)}
-    .acc-item+.acc-item{border-top:1px solid rgba(255,255,255,.06)}
-    .acc-head{display:flex;justify-content:space-between;align-items:center;padding:18px 20px;cursor:pointer;background:linear-gradient(180deg,#0e0e12,#13131a)}
-    .acc-head h4{margin:0}
-    .acc-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .35s ease}
-    .acc-body>div{overflow:hidden;padding:0 20px 0 20px}
-    .acc-item.open .acc-body{grid-template-rows:1fr}
-    .acc-item.open .acc-body>div{padding:12px 20px 20px 20px}
-
-    /* Footer */
-    footer{padding:50px 0;border-top:1px solid rgba(212,175,55,.12);background:linear-gradient(180deg,#0a0a0d,#09090b)}
-    .foot{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:32px}
-    @media (max-width:980px){.foot{grid-template-columns:1fr}}
-
-    /* Reveal + ToTop */
-    .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease, transform .6s ease}
-    .reveal.revealed{opacity:1;transform:none}
-    .to-top{position:fixed;right:18px;bottom:18px;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;border:1px solid rgba(212,175,55,.3);background:linear-gradient(180deg,#0d0d12,#12121a);box-shadow:var(--shadow);cursor:pointer;opacity:.0;transform:translateY(12px);transition:.25s}
-    .to-top.show{opacity:1;transform:none}
-
-    /* Scrollbar */
-    ::-webkit-scrollbar{height:10px;width:10px}
-    ::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--gold),var(--gold-2));border-radius:999px}
+    .gold{
+      background:linear-gradient(135deg,var(--gold),var(--gold-2));
+      -webkit-background-clip:text;background-clip:text;color:transparent;
+    }
+    .card{
+      width:min(560px, 100%);
+      background:linear-gradient(180deg,var(--panel),#0d0d12);
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:28px;
+      box-shadow:var(--shadow);
+      padding:28px;
+      text-align:center;
+      position:relative;
+      overflow:hidden;
+    }
+    .card::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:radial-gradient(600px 260px at 50% 0%, rgba(212,175,55,.18), transparent 60%);
+      pointer-events:none;
+    }
+    h1{
+      margin:0 0 10px 0;
+      letter-spacing:.12em;
+      font-size:18px;
+      font-weight:700;
+      position:relative;
+    }
+    p{
+      margin:0 0 18px 0;
+      color:var(--muted);
+      position:relative;
+    }
+    .btn{
+      position:relative;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding:14px 22px;
+      border-radius:999px;
+      border:1px solid rgba(212,175,55,.35);
+      background:linear-gradient(135deg,rgba(212,175,55,.16),rgba(224,196,108,.08));
+      color:var(--text);
+      cursor:pointer;
+      text-decoration:none;
+      transition:transform .2s ease, box-shadow .2s ease;
+      box-shadow:0 0 0 1px var(--ring), inset 0 0 0 1px rgba(255,255,255,.02);
+      font-weight:600;
+    }
+    .btn:hover{transform:translateY(-2px)}
+    .btn:active{transform:translateY(0)}
+    .btn:focus-visible{
+      outline:none;
+      box-shadow:0 0 0 3px rgba(212,175,55,.22), 0 0 0 1px var(--ring), inset 0 0 0 1px rgba(255,255,255,.02);
+    }
   </style>
 </head>
 <body>
-  <div class="progress" id="progress"></div>
-
-  <!-- NAV -->
-  <nav class="nav">
-    <div class="container nav-inner">
-      <div class="brand">
-        <!-- Stylized crown logo (SVG) + wordmark, left side -->
-        <div class="brand-logo" aria-label="Rolex Crown">
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M3 7c1.2 2.2 2.7 3 3.9 2.5C8 9 8.6 7.6 9 6.5c.8 2 2.4 4.2 3 4.2s2.3-2.1 3-4.2c.4 1.1 1 2.5 2.1 3 1.3.5 2.7-.3 3.9-2.5-.8 5.7-4.5 9.2-9 9.2S3.8 12.7 3 7Z" fill="url(#g)"/>
-            <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d4af37"/><stop offset="1" stop-color="#e0c46c"/></linearGradient></defs>
-          </svg>
-        </div>
-        <h1><span class="gold">ROLEX</span> GUIDE</h1>
-      </div>
-      <div class="nav-links">
-        <a href="#legacy">Legacy</a>
-        <a href="#innovations">Innovations</a>
-        <a href="#characteristics">Characteristics</a>
-        <a href="#movements2">Movements</a>
-        <a href="#case">Case</a>
-        <a href="#bracelets">Bracelets</a>
-        <a href="#materials2">Materials</a>
-        <a href="#specs">Technical&nbsp;Specs</a>
-        <a href="#dials">Dials</a>
-        <a href="#collections">Collections</a>
-        <a href="#invest" class="cta">Invest</a>
-      </div>
-    </div>
-  </nav>
-
-  <!-- HERO -->
-  <header class="hero" id="top">
-    <div class="parallax" data-parallax="0.25"></div>
-    <div class="container">
-      <div>
-        <span class="hero-badge">Luxury • Precision • Timelessness</span>
-        <h2 class="gold">The Ultimate Guide to Buying a Rolex</h2>
-        <p>Rolex stands for prestige, excellence, and lasting value. This portfolio covers legacy, innovations, core characteristics, movement engineering, cases, bracelets, materials, dial craft, and investment rationale.</p>
-        <div class="hero-actions">
-          <a class="btn" href="#collections">Explore Collections</a>
-          <a class="btn secondary" href="#invest">Why Invest</a>
-        </div>
-        <p style="margin-top:16px;color:var(--muted)"><strong class="gold">Presentation</strong> by <b>Danis Gouedart</b> & <b>Yohan Do Cao</b></p>
-      </div>
-
-      <!-- HERO IMAGE -->
-      <div class="watch-card" id="heroWatch">
-        <img class="hero-watch-img" src="dial rolex.png" alt="Rolex hero image" />
-      </div>
-    </div>
-  </header>
-
-  <!-- LEGACY -->
-  <section id="legacy">
-    <div class="container">
-      <h2 class="section-title gold">A Legacy of Excellence</h2>
-      <p class="section-sub">1905 to today: precision, durability, timeless design.</p>
-      <div class="timeline">
-        <div class="tl-item reveal">
-          <div class="dot"></div>
-          <div class="tl-card"><h3>1905 — The Beginning</h3><p>Mission to set new standards in wristwatch accuracy and reliability.</p></div>
-          <div class="tl-card"><h3>1926 — The Oyster Case</h3><p>First waterproof and dustproof case. Template for modern sports watches.</p></div>
-        </div>
-        <div class="tl-item reveal">
-          <div class="dot"></div>
-          <div class="tl-card"><h3>1931 — Perpetual Rotor</h3><p>Self-winding rotor stabilizes amplitude during daily wear.</p></div>
-          <div class="tl-card"><h3>1953–1967 — Professional Era</h3><p>Submariner, GMT-Master, and Sea-Dweller address depth and travel.</p></div>
-        </div>
-        <div class="tl-item reveal">
-          <div class="dot"></div>
-          <div class="tl-card"><h3>2000s — Materials</h3><p>Everose, Cerachrom, and advanced alloys improve durability and finish.</p></div>
-          <div class="tl-card"><h3>Today — Superlative</h3><p>In-house calibers, rigorous testing, enduring value.</p></div>
-        </div>
-      </div>
-      <hr class="gold-hr" />
-    </div>
-  </section>
-
-  <!-- INNOVATIONS -->
-  <section id="innovations">
-    <div class="container">
-      <h2 class="section-title gold">Key Rolex Innovations</h2>
-      <p class="section-sub">Oyster Case • Perpetual Rotor • Chromalight • Cyclops</p>
-      <div class="grid grid-2">
-        <div class="feature reveal">
-          <div class="feature-media">
-            <div class="watch-face" style="aspect-ratio:16/9"><div class="watch-bezel"></div><div class="watch-hands"></div><div class="watch-markers"></div></div>
-          </div>
-          <div class="feature-body">
-            <h3 class="gold">Oyster Case</h3>
-            <p>Hermetic sealing, screw-down interfaces, and gasket systems define robustness.</p>
-            <ul><li>Water/dust protection</li><li>Precision tolerances</li><li>Daily-wear reliability</li></ul>
-          </div>
-        </div>
-        <div class="feature reveal">
-          <div class="feature-media">
-            <div class="watch-face" style="aspect-ratio:16/9"><div class="watch-bezel"></div><div class="watch-hands"></div><div class="watch-markers"></div></div>
-          </div>
-          <div class="feature-body">
-            <h3 class="gold">Perpetual Movement</h3>
-            <p>Automatic rotor introduced in 1931 keeps reserve topped during motion.</p>
-            <ul><li>Bi-directional winding</li><li>Stable amplitude</li><li>Convenience</li></ul>
-          </div>
-        </div>
-        <div class="feature reveal">
-          <div class="feature-media">
-            <div class="watch-face" style="aspect-ratio:16/9"><div class="watch-bezel"></div><div class="watch-hands"></div><div class="watch-markers"></div></div>
-          </div>
-          <div class="feature-body">
-            <h3 class="gold">Chromalight</h3>
-            <p>Long-lasting blue emission for uniform legibility at night.</p>
-            <ul><li>Balanced spectrum</li><li>Even distribution</li><li>Tool-watch clarity</li></ul>
-          </div>
-        </div>
-        <div class="feature reveal">
-          <div class="feature-media">
-            <div class="watch-face" style="aspect-ratio:16/9"><div class="watch-bezel"></div><div class="watch-hands"></div><div class="watch-markers"></div></div>
-          </div>
-          <div class="feature-body">
-            <h3 class="gold">Cyclops Lens</h3>
-            <p>Signature date magnifier. Instant read and strong visual identity.</p>
-            <ul><li>High-clarity crystal</li><li>Iconic silhouette</li><li>Practical benefit</li></ul>
-          </div>
-        </div>
-      </div>
-      <hr class="gold-hr" />
-    </div>
-  </section>
-
-  <!-- CHARACTERISTICS -->
-  <section id="characteristics">
-    <div class="container">
-      <h2 class="section-title gold">Core Characteristics</h2>
-      <p class="section-sub">What defines a Rolex across the range.</p>
-      <div class="grid grid-3">
-        <div class="card reveal">
-          <h3>Accuracy</h3>
-          <p>In-house chronometer calibers tuned for stable amplitude and dependable timekeeping.</p>
-          <ul><li>Chronometer testing</li><li>Optimized escapements</li><li>Consistent daily wear</li></ul>
-        </div>
-        <div class="card reveal">
-          <h3>Durability</h3>
-          <p>Oystersteel, Cerachrom, and sealed architecture create resilience without sacrificing refinement.</p>
-          <ul><li>904L corrosion resistance</li><li>Impact control</li><li>Scratch mitigation</li></ul>
-        </div>
-        <div class="card reveal">
-          <h3>Design Continuity</h3>
-          <p>Balanced geometry and legible dials. Evolutionary updates preserve identity and value.</p>
-          <ul><li>Iconic profiles</li><li>Readable layouts</li><li>Versatile style</li></ul>
-        </div>
-      </div>
-      <hr class="gold-hr" />
-    </div>
-  </section>
-
-  <!-- MOVEMENTS -->
-  <section id="movements2">
-    <div class="container">
-      <h2 class="section-title gold">Movements</h2>
-      <p class="section-sub">Precision mechanisms engineered for longevity.</p>
-      <div class="feature reveal">
-        <div class="feature-media figure">
-          <img src="move.png" alt="Rolex movement macro" />
-        </div>
-        <div class="feature-body">
-          <h3 class="gold">Inside the Case</h3>
-          <p>In-house calibers focus on accuracy, reliability, and serviceability. Chronergy escapement and extended power reserves enhance daily usability.</p>
-          <ul>
-            <li><b>Cal. 3135</b> — 48h reserve, Datejust/Submariner</li>
-            <li><b>Cal. 3235</b> — ~70h, Chronergy escapement</li>
-            <li><b>Cal. 4130</b> — vertical-clutch chronograph (Daytona)</li>
-            <li><b>Cal. 2236</b> — ~55h, high-stability spring</li>
-          </ul>
-        </div>
-      </div>
-      <div class="accordion" style="margin-top:18px">
-        <div class="acc-item">
-          <div class="acc-head"><h4>Winding & Power</h4><span>+</span></div>
-          <div class="acc-body"><div><p>Bi-directional rotors, efficient mainsprings, and low-friction trains sustain reserve without manual winding.</p></div></div>
-        </div>
-        <div class="acc-item">
-          <div class="acc-head"><h4>Regulation & Testing</h4><span>+</span></div>
-          <div class="acc-body"><div><p>Multi-stage adjustments and validation ensure chronometer performance in real-world positions and temperatures.</p></div></div>
-        </div>
-      </div>
-      <hr class="gold-hr" />
-    </div>
-  </section>
-
-  <!-- CASE -->
-  <section id="case">
-    <div class="container">
-      <h2 class="section-title gold">Case</h2>
-      <p class="section-sub">Oyster architecture, waterproofing, and strength.</p>
-      <div class="feature reveal">
-        <div class="feature-media figure">
-          <img src="case prof.png" alt="Rolex case side profile" />
-        </div>
-        <div class="feature-body">
-          <h3 class="gold">Oyster Architecture</h3>
-          <p>Monobloc middle case with screw-down crown and caseback forms a hermetic shell against water and dust.</p>
-          <ul>
-            <li>Controlled gasket tolerances</li>
-            <li>Pressure-locking interfaces</li>
-            <li>Polished/Brushed surfacing for depth</li>
-          </ul>
-        </div>
-      </div>
-      <hr class="gold-hr" />
-    </div>
-  </section>
-
-  <!-- BRACELETS -->
-  <section id="bracelets">
-    <div class="container">
-      <h2 class="section-title gold">Bracelets</h2>
-      <p class="section-sub">Comfort, security, and identity.</p>
-      <div class="feature reveal">
-        <div class="feature-media figure">
-          <img src="rolex bracelet.png" alt="Rolex bracelet detail" />
-        </div>
-        <div class="feature-body">
-          <h3 class="gold">Oyster • Jubilee • President • Oysterflex</h3>
-          <p>Bracelets blend secure lockup with ergonomics. Oysterflex adds elastomer comfort around metal blades for stability.</p>
-          <ul>
-            <li>Micro-adjust extensions</li>
-            <li>Distinct link geometry</li>
-            <li>Polish vs satin contrast</li>
-          </ul>
-        </div>
-      </div>
-      <hr class="gold-hr" />
-    </div>
-  </section>
-
-  <!-- MATERIALS -->
-  <section id="materials2">
-    <div class="container">
-      <h2 class="section-title gold">Materials</h2>
-      <p class="section-sub">Oystersteel • Everose • Cerachrom • Rolesor</p>
-      <div class="feature reveal">
-        <div class="feature-media figure">
-          <img src="everose.png" alt="Everose/metal materials macro" />
-        </div>
-        <div class="feature-body">
-          <h3 class="gold">Engineered For Use</h3>
-          <p>904L Oystersteel resists corrosion and holds a deep polish. Everose 18ct retains hue. Cerachrom bezels resist scratches and fading. Rolesor blends strength and precious warmth.</p>
-          <ul>
-            <li>904L steel for harsh environments</li>
-            <li>Stable proprietary gold alloys</li>
-            <li>Ultra-hard ceramic bezels</li>
-          </ul>
-        </div>
-      </div>
-      <hr class="gold-hr" />
-    </div>
-  </section>
-
-  <!-- TECHNICAL SPECS -->
-  <section id="specs">
-    <div class="container">
-      <h2 class="section-title gold">Technical Specifications</h2>
-      <p class="section-sub">Reference facts at a glance.</p>
-      <div class="feature reveal">
-        <div class="feature-media figure">
-          <img src="specifical rolex.png" alt="Technical caseback and valve" />
-        </div>
-        <div class="feature-body">
-          <h3 class="gold">Spec Tables</h3>
-          <p>Dimensions, water-resistance, materials, movement family, reserve, bracelet, and dial options for quick comparison across lines.</p>
-          <ul>
-            <li>WR: 100–1220 m by model</li>
-            <li>Bezel: Fixed/rotatable, steel/ceramic/gold</li>
-            <li>Bracelet: Oyster, Jubilee, President, Oysterflex</li>
-          </ul>
-        </div>
-      </div>
-      <div class="card reveal" style="margin-top:18px;overflow:auto">
-        <table style="width:100%;border-collapse:collapse">
-          <thead>
-            <tr style="text-align:left">
-              <th style="padding:10px;border-bottom:1px solid rgba(255,255,255,.08)">Model</th>
-              <th style="padding:10px;border-bottom:1px solid rgba(255,255,255,.08)">WR</th>
-              <th style="padding:10px;border-bottom:1px solid rgba(255,255,255,.08)">Movement</th>
-              <th style="padding:10px;border-bottom:1px solid rgba(255,255,255,.08)">Reserve</th>
-              <th style="padding:10px;border-bottom:1px solid rgba(255,255,255,.08)">Bezel</th>
-              <th style="padding:10px;border-bottom:1px solid rgba(255,255,255,.08)">Bracelet</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td style="padding:10px">Submariner Date</td><td style="padding:10px">300 m</td><td style="padding:10px">Cal. 3235</td><td style="padding:10px">~70 h</td><td style="padding:10px">Cerachrom, uni</td><td style="padding:10px">Oyster</td></tr>
-            <tr><td style="padding:10px">Datejust 41</td><td style="padding:10px">100 m</td><td style="padding:10px">Cal. 3235</td><td style="padding:10px">~70 h</td><td style="padding:10px">Fluted/Smooth</td><td style="padding:10px">Oyster/Jubilee</td></tr>
-            <tr><td style="padding:10px">Day-Date</td><td style="padding:10px">100 m</td><td style="padding:10px">Cal. 3255</td><td style="padding:10px">~70 h</td><td style="padding:10px">Fluted/Smooth</td><td style="padding:10px">President</td></tr>
-            <tr><td style="padding:10px">Daytona</td><td style="padding:10px">100 m</td><td style="padding:10px">Cal. 4130</td><td style="padding:10px">~72 h</td><td style="padding:10px">Tachymeter</td><td style="padding:10px">Oyster</td></tr>
-            <tr><td style="padding:10px">Sea-Dweller</td><td style="padding:10px">1220 m</td><td style="padding:10px">Cal. 3235</td><td style="padding:10px">~70 h</td><td style="padding:10px">Cerachrom, uni</td><td style="padding:10px">Oyster</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <hr class="gold-hr" />
-    </div>
-  </section>
-
-  <!-- DIALS (PNG HERE) -->
-  <section id="dials">
-    <div class="container">
-      <h2 class="section-title gold">Dials</h2>
-      <p class="section-sub">Legibility, finishing, Chromalight.</p>
-      <div class="feature reveal">
-        <div class="feature-media figure">
-          <!-- Replace with your PNG file name/path -->
-          <img src="dials.png" alt="Dial composition" />
-        </div>
-        <div class="feature-body">
-          <h3 class="gold">Readability First</h3>
-          <p>Applied indices, strong contrast, and consistent minute tracks support instant reading. Surface finishes range from sunburst to matte tool-watch textures.</p>
-          <ul><li>Chromalight blue emission</li><li>Refined typography and hands</li><li>Balanced dial symmetry</li></ul>
-        </div>
-      </div>
-      <hr class="gold-hr" />
-    </div>
-  </section>
-
-  <!-- COLLECTIONS -->
-  <section id="collections">
-    <div class="container">
-      <h2 class="section-title gold">Flagship Collections</h2>
-      <p class="section-sub">Pick by lifestyle and function.</p>
-      <div class="grid grid-3">
-        <div class="card reveal"><h3>Submariner</h3><ul><li>300 m water-resistance</li><li>Unidirectional bezel</li><li>Chromalight visibility</li></ul></div>
-        <div class="card reveal"><h3>Datejust</h3><ul><li>Versatile design</li><li>Cyclops magnifier</li><li>Everyday elegance</li></ul></div>
-        <div class="card reveal"><h3>Day-Date</h3><ul><li>Full day & date</li><li>Often precious metals</li><li>“President’s Watch”</li></ul></div>
-        <div class="card reveal"><h3>Cosmograph Daytona</h3><ul><li>Racing chronograph</li><li>Tachymeter bezel</li><li>High-precision timing</li></ul></div>
-        <div class="card reveal"><h3>Sea-Dweller</h3><ul><li>1220 m resistance</li><li>Helium escape valve</li><li>Professional tool</li></ul></div>
-        <div class="card reveal"><h3>GMT-Master II</h3><ul><li>Dual-time</li><li>Cerachrom bezel</li><li>Travel ready</li></ul></div>
-      </div>
-      <hr class="gold-hr" />
-    </div>
-  </section>
-
-  <!-- INVEST -->
-  <section id="invest">
-    <div class="container">
-      <h2 class="section-title gold">Why Invest in a Rolex?</h2>
-      <p class="section-sub">Value retention, craftsmanship, status.</p>
-      <div class="grid grid-3">
-        <div class="card reveal"><h3>Value Retention</h3><p>Popular references and constrained supply support long-term value.</p></div>
-        <div class="card reveal"><h3>Craftsmanship</h3><p>In-house engineering, finishing, and materials science deliver reliability and aesthetics.</p></div>
-        <div class="card reveal"><h3>Status & Legacy</h3><p>A signifier of achievement that often becomes a multi-generation heirloom.</p></div>
-      </div>
-      <div class="card reveal" style="margin-top:22px;display:flex;justify-content:space-between;gap:16px;align-items:center">
-        <div><strong class="gold">Save this page</strong><p style="color:var(--muted);margin:6px 0 0 0">Print to PDF or keep as a single HTML file.</p></div>
-        <button class="btn" onclick="window.print()">Print / PDF</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer>
-    <div class="container foot">
-      <div>
-        <h4 class="gold">The Rolex Buyer’s Portfolio</h4>
-        <p>Single-file luxury presentation. Images integrated. Not affiliated with Rolex SA.</p>
-        <p><strong class="gold">Presented by</strong> Danis Gouedart & Yohan Do Cao</p>
-      </div>
-      <div>
-        <h4 class="gold">Sections</h4>
-        <ul>
-          <li><a href="#legacy">Legacy</a></li>
-          <li><a href="#innovations">Innovations</a></li>
-          <li><a href="#characteristics">Characteristics</a></li>
-          <li><a href="#movements2">Movements</a></li>
-          <li><a href="#case">Case</a></li>
-          <li><a href="#bracelets">Bracelets</a></li>
-          <li><a href="#materials2">Materials</a></li>
-          <li><a href="#specs">Technical Specs</a></li>
-          <li><a href="#dials">Dials</a></li>
-          <li><a href="#collections">Collections</a></li>
-          <li><a href="#invest">Invest</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="gold">Customize</h4>
-        <ul>
-          <li>Swap or add photos</li>
-          <li>Tweak color variables</li>
-          <li>Extend sections</li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="gold">Credits</h4>
-        <p>Design & code for presentation use. Crown mark is a stylized SVG, not the official logo.</p>
-      </div>
-    </div>
-    <div class="container" style="margin-top:22px">
-      <div class="gold-hr"></div>
-      <p style="text-align:center;color:var(--muted);margin-top:16px">© 2025 • Luxury Portfolio Template.</p>
-    </div>
-  </footer>
-
-  <button class="to-top" id="toTop" aria-label="Back to top">↑</button>
-
-  <!-- Lightbox container (kept for future gallery use) -->
-  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image preview">
-    <img src="" alt="Preview" />
-  </div>
-
-  <script>
-    // Smooth anchor scroll
-    document.querySelectorAll('a[href^="#"]').forEach(a=>{
-      a.addEventListener('click',e=>{
-        const id=a.getAttribute('href');
-        if(id.length>1){e.preventDefault();document.querySelector(id).scrollIntoView({behavior:'smooth'})}
-      })
-    });
-
-    // Scroll progress + to-top
-    const progress=document.getElementById('progress');
-    const onScroll=()=>{
-      const h=document.documentElement;
-      const scrolled=h.scrollTop/(h.scrollHeight-h.clientHeight);
-      progress.style.transform=`scaleX(${scrolled})`;
-      const toTop=document.getElementById('toTop');
-      if(h.scrollTop>400){toTop.classList.add('show')}else{toTop.classList.remove('show')}
-    };
-    document.addEventListener('scroll',onScroll,{passive:true}); onScroll();
-
-    // To top
-    document.getElementById('toTop').addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
-
-    // Reveal on view
-    const io=new IntersectionObserver((entries)=>{
-      entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('revealed')}})
-    },{threshold:.12});
-    document.querySelectorAll('.reveal, .card').forEach(el=>io.observe(el));
-
-    // Parallax backgrounds
-    const parEls=[...document.querySelectorAll('[data-parallax]')];
-    document.addEventListener('scroll',()=>{
-      const y=window.scrollY; parEls.forEach(el=>{
-        const f=parseFloat(el.dataset.parallax||0.2);
-        el.style.transform=`translateY(${y*f*-0.08}px)`;
-      });
-    },{passive:true});
-
-    // Hero tilt
-    const hero=document.getElementById('heroWatch');
-    hero.addEventListener('mousemove',(e)=>{
-      const r=hero.getBoundingClientRect();
-      const cx=r.left+r.width/2, cy=r.top+r.height/2;
-      const dx=(e.clientX-cx)/r.width, dy=(e.clientY-cy)/r.height;
-      hero.style.transform=`rotateX(${(-dy*6).toFixed(2)}deg) rotateY(${(dx*6).toFixed(2)}deg)`;
-    });
-    hero.addEventListener('mouseleave',()=>hero.style.transform='');
-
-    // Accordion
-    document.querySelectorAll('.acc-head').forEach(head=>{
-      head.addEventListener('click',()=>head.parentElement.classList.toggle('open'));
-    });
-
-    // Lightbox hook (not used yet here, kept for extensibility)
-    const lb=document.getElementById('lightbox'); const lbImg=lb.querySelector('img');
-    document.body.addEventListener('click',(e)=>{
-      const t=e.target.closest('[data-lightbox-src]');
-      if(!t) return;
-      lbImg.src=t.getAttribute('data-lightbox-src'); lb.classList.add('show');
-    });
-    lb.addEventListener('click',()=>lb.classList.remove('show'));
-    document.addEventListener('keydown',(e)=>{if(e.key==='Escape'){lb.classList.remove('show')}});
-
-  </script>
+  <main class="card" role="main">
+    <h1><span class="gold">ROLEX</span> GUIDE</h1>
+    <p>Luxury • Precision • Timelessness</p>
+    <a class="btn" href="rolex.html" aria-label="Entrer sur le site (rolex.html)">
+      Entrer sur le site
+    </a>
+  </main>
 </body>
 </html>
