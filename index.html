@@ -1,2495 +1,537 @@
-
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Portfolio Danis Gouedart</title>
-
-    <!-- police Inter -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
-      rel="stylesheet"
-    />
-
-    <!-- Leaflet (carte claire) -->
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-      crossorigin=""
-    />
-    <script
-      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-      crossorigin=""
-    ></script>
-
-    <!-- Meta pour SEO -->
-    <meta
-      name="description"
-      content="Portfolio de Danis Gouedart - BTS SIO SISR - alternant à la Comédie-Française."
-    />
-    <meta name="author" content="Danis Gouedart" />
-
-    <style>
-      /* =========================== RESET & BASE =========================== */
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-      html,
-      body {
-        height: 100%;
-      }
-      html {
-        scroll-behavior: smooth;
-      }
-      body {
-        font-family: "Inter", sans-serif;
-
-        /* Fond dégradé doux + variables de parallaxe */
-        --grad1: #f0f4f8;
-        --grad2: #e6eef7;
-        --grad3: #ffffff;
-        --grad4: #eef6ff;
-        --parallaxX: 0%;
-        --parallaxY: 0%;
-
-        background: radial-gradient(
-            1200px 800px at calc(10% + var(--parallaxX))
-              calc(20% + var(--parallaxY)),
-            var(--grad1),
-            transparent 60%
-          ),
-          radial-gradient(
-            1000px 900px at calc(90% - var(--parallaxX))
-              calc(10% + var(--parallaxY)),
-            var(--grad2),
-            transparent 60%
-          ),
-          radial-gradient(
-            900px 700px at calc(20% + var(--parallaxX))
-              calc(90% - var(--parallaxY)),
-            var(--grad4),
-            transparent 60%
-          ),
-          linear-gradient(
-            135deg,
-            var(--grad1),
-            var(--grad2) 40%,
-            var(--grad3) 100%
-          );
-        background-size: 140% 140%, 140% 140%, 140% 140%, 100% 100%;
-        animation: bgShift 35s ease-in-out infinite alternate;
-
-        color: #111827;
-        min-height: 100vh;
-        line-height: 1.5;
-        padding-bottom: 60px;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        transition: background 0.6s ease, color 0.6s ease, filter 0.4s ease;
-      }
-
-      @keyframes bgShift {
-        0% {
-          background-position: 0% 0%, 100% 0%, 0% 100%, 0% 0%;
-        }
-        50% {
-          background-position: 30% 20%, 80% 10%, 10% 80%, 0% 0%;
-        }
-        100% {
-          background-position: 60% 40%, 60% 20%, 20% 60%, 0% 0%;
-        }
-      }
-
-      /* =========================== CANVAS RESEAU (derrière tout) =========================== */
-      #bg-network {
-        position: fixed;
-        inset: 0;
-        z-index: 0;
-        pointer-events: none;
-        opacity: 0.75;
-      }
-
-      /* =========================== INTRO ÉCRAN =========================== */
-      #intro-screen {
-        position: fixed;
-        inset: 0;
-        z-index: 9999;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        backdrop-filter: blur(2px);
-        background: inherit;
-        flex-direction: column;
-        gap: 0.75rem;
-        transition: opacity 0.8s ease, transform 0.8s ease,
-          visibility 0.8s ease;
-      }
-      #intro-screen.intro-hidden {
-        opacity: 0;
-        transform: scale(0.985) translateY(-4px);
-        visibility: hidden;
-      }
-      #intro-logo {
-        width: min(22vw, 96px);
-        height: min(22vw, 96px);
-        filter: drop-shadow(0 6px 18px rgba(37, 99, 235, 0.35));
-      }
-      #intro-content {
-        font-size: clamp(2rem, 6vw, 4rem);
-        font-weight: 800;
-        letter-spacing: 0.03em;
-        background: linear-gradient(
-          90deg,
-          #2563eb 0%,
-          #60a5fa 30%,
-          #93c5fd 50%,
-          #60a5fa 70%,
-          #2563eb 100%
-        );
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-        filter: drop-shadow(0 6px 18px rgba(37, 99, 235, 0.25));
-        background-size: 200% auto;
-        animation: shine 1.2s ease-in-out infinite alternate,
-          introPop 0.6s ease-out both;
-        text-align: center;
-        padding: 0 0.3em;
-      }
-      #intro-actions {
-        display: flex;
-        gap: 0.6rem;
-        margin-top: 0.2rem;
-      }
-      #intro-skip,
-      #intro-disable {
-        font-size: 0.95rem;
-        color: #0f172a;
-        background: rgba(255, 255, 255, 0.6);
-        border: 1px solid rgba(0, 0, 0, 0.05);
-        padding: 0.35rem 0.6rem;
-        border-radius: 10px;
-        cursor: pointer;
-        transition: 0.25s;
-        backdrop-filter: saturate(140%) blur(8px);
-      }
-      #intro-disable {
-        font-size: 0.88rem;
-        opacity: 0.9;
-        color: #1e40af;
-        text-decoration: underline;
-        background: transparent;
-        border: none;
-      }
-      @keyframes shine {
-        0% {
-          background-position: 0% 50%;
-        }
-        100% {
-          background-position: 100% 50%;
-        }
-      }
-      @keyframes introPop {
-        from {
-          opacity: 0;
-          transform: translateY(8px) scale(0.98);
-        }
-        to {
-          opacity: 1;
-          transform: none;
-        }
-      }
-
-      /* =========================== HEADER (glassmorphism) =========================== */
-      header {
-        background: rgba(31, 41, 55, 0.6);
-        padding: 1.1rem 2rem;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        backdrop-filter: saturate(140%) blur(10px);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-      }
-      header h1 {
-        font-size: 1.9rem;
-        color: #f9fafb;
-        font-weight: 700;
-        letter-spacing: 1px;
-        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
-        margin: 0;
-      }
-      .logo-wrap {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-      }
-
-      /* =========================== PROGRESS BAR =========================== */
-      .progress-bar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        height: 4px;
-        width: 0%;
-        background: linear-gradient(90deg, #3b82f6, #60a5fa);
-        z-index: 1000;
-        box-shadow: 0 0 18px rgba(59, 130, 246, 0.6);
-        transition: width 0.1s linear;
-      }
-
-      /* =========================== NAVIGATION + thème =========================== */
-      nav {
-        background: rgba(55, 65, 81, 0.55);
-        padding: 1rem 2rem;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1rem;
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
-        backdrop-filter: saturate(160%) blur(10px);
-        position: sticky;
-        top: calc(68px);
-        z-index: 100;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        transition: transform 0.35s ease, opacity 0.35s ease;
-      }
-      nav ul {
-        display: flex;
-        list-style: none;
-        gap: 2rem;
-        flex-wrap: wrap;
-        align-items: center;
-      }
-      nav li {
-        position: relative;
-      }
-      nav > ul > li > a {
-        position: relative;
-        text-decoration: none;
-        color: #f3f4f6;
-        font-weight: 600;
-        padding: 0.6rem 1.2rem;
-        border-radius: 12px;
-        transition: all 0.25s ease;
-        background: rgba(75, 85, 99, 0.65);
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-        overflow: hidden;
-        border: 1px solid rgba(255, 255, 255, 0.09);
-      }
-      nav > ul > li > a:hover {
-        background: #2563eb;
-        color: #fff;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
-      }
-      nav > ul > li > a.active-link {
-        outline: 2px solid rgba(96, 165, 250, 0.7);
-        background: rgba(59, 130, 246, 0.25);
-      }
-
-      /* Ripple DISCRET (nouvelle taille/durée) */
-      .ripple {
-        position: absolute;
-        border-radius: 50%;
-        transform: scale(0);
-        pointer-events: none;
-        background: rgba(255, 255, 255, 0.45);
-        animation: ripple 0.45s linear;
-      }
-      @keyframes ripple {
-        to {
-          transform: scale(3.5);
-          opacity: 0;
-        }
-      }
-      .tap-bump:active {
-        transform: translateY(0) scale(0.98);
-      }
-
-      nav ul ul {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        background: rgba(75, 85, 99, 0.9);
-        border-radius: 10px;
-        padding: 0.5rem 0;
-        z-index: 10;
-        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
-        backdrop-filter: blur(8px);
-      }
-      nav li:hover > ul {
-        display: block;
-      }
-      nav ul ul li a {
-        display: block;
-        padding: 0.6rem 1.5rem;
-        color: #f3f4f6;
-        text-decoration: none;
-        transition: all 0.2s ease;
-      }
-      nav ul ul li a:hover {
-        background: #2563eb;
-        color: #fff;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      }
-
-      .actions {
-        display: flex;
-        align-items: center;
-        gap: 0.6rem;
-      }
-      .btn {
-        padding: 0.55rem 0.85rem;
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        background: rgba(255, 255, 255, 0.2);
-        color: #ffffff;
-        cursor: pointer;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
-        transition: 0.25s;
-        backdrop-filter: blur(8px);
-      }
-      .btn:hover {
-        transform: translateY(-1px);
-        background: rgba(37, 99, 235, 0.5);
-      }
-      .btn:active {
-        transform: translateY(0);
-      }
-
-      .theme-toggle {
-        position: relative;
-        width: 62px;
-        height: 34px;
-        border-radius: 999px;
-        border: none;
-        cursor: pointer;
-        background: linear-gradient(180deg, #e5e7eb, #cbd5e1);
-        padding: 4px;
-        box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.15),
-          0 4px 12px rgba(0, 0, 0, 0.15);
-        transition: background 0.3s ease, transform 0.2s ease;
-      }
-      .theme-toggle:hover {
-        transform: translateY(-1px);
-      }
-      .theme-toggle .thumb {
-        position: absolute;
-        top: 4px;
-        left: 4px;
-        width: 26px;
-        height: 26px;
-        border-radius: 50%;
-        background: #fff;
-        display: grid;
-        place-items: center;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
-        transition: left 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
-          transform 0.35s, background 0.35s;
-        font-size: 16px;
-      }
-      body[data-theme="dark"] .theme-toggle {
-        background: linear-gradient(180deg, #0b1220, #111827);
-      }
-      body[data-theme="dark"] .theme-toggle .thumb {
-        left: 32px;
-        background: #0f172a;
-        color: #e2e8f0;
-      }
-
-      /* =========================== MAIN =========================== */
-      main {
-        padding: 4rem 2rem;
-        max-width: 1100px;
-        margin: 0 auto;
-        position: relative;
-        z-index: 1;
-      }
-      section {
-        display: none;
-        animation: fadeIn 0.5s ease-out forwards;
-        background: transparent;
-        will-change: opacity, transform;
-      }
-      section.active {
-        display: block;
-      }
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(8px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      .transition-enter {
-        opacity: 0;
-        transform: translateY(8px);
-      }
-      .transition-enter-active {
-        opacity: 1;
-        transform: none;
-        transition: 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
-      }
-
-      /* Titres brillants au survol + surbrillance quand visible */
-      h2 {
-        font-size: 2.2rem;
-        margin-bottom: 1.2rem;
-        border-bottom: 3px solid #d1d5db;
-        padding-bottom: 0.6rem;
-        color: #1f2937;
-        position: relative;
-      }
-      h2:hover::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        bottom: -2px;
-        width: 100%;
-        height: 3px;
-        background: linear-gradient(90deg, transparent, #60a5fa, transparent);
-        filter: blur(0.5px);
-        animation: shineLine 1.2s ease;
-      }
-      h2.inview {
-        text-shadow: 0 3px 22px rgba(59, 130, 246, 0.28);
-      }
-      @keyframes shineLine {
-        from {
-          transform: translateX(-20%);
-          opacity: 0.2;
-        }
-        to {
-          transform: translateX(20%);
-          opacity: 1;
-        }
-      }
-      h3 {
-        margin-top: 1.2rem;
-        margin-bottom: 0.6rem;
-        color: #1f2937;
-      }
-      p,
-      li {
-        font-size: 1.05rem;
-        line-height: 1.7;
-        color: #1f2937;
-      }
-      ul li {
-        margin-left: 1.2rem;
-        margin-bottom: 0.6rem;
-      }
-      a {
-        color: #2563eb;
-        text-decoration: none;
-        transition: transform 0.25s, color 0.25s;
-      }
-      a:hover {
-        color: #1d4ed8;
-        text-decoration: underline;
-        transform: translateY(-2px);
-      }
-      iframe,
-      img,
-      object,
-      embed {
-        max-width: 100%;
-        height: auto;
-        border-radius: 12px;
-        display: block;
-      }
-
-      /* =========================== ORGANIGRAMME =========================== */
-      .organigramme {
-        margin-top: 1.5rem;
-        padding: 1.75rem;
-        background: linear-gradient(
-          180deg,
-          rgba(248, 250, 252, 0.65) 0%,
-          rgba(238, 242, 255, 0.65) 100%
-        );
-        border-radius: 20px;
-        display: flex;
-        flex-direction: column;
-        gap: 18px;
-        box-shadow: 0 8px 28px rgba(2, 6, 23, 0.08),
-          inset 0 1px 0 rgba(255, 255, 255, 0.7);
-        position: relative;
-        overflow: hidden;
-        backdrop-filter: blur(8px) saturate(130%);
-      }
-      .organigramme::after {
-        content: "";
-        position: absolute;
-        inset: -20%;
-        background: radial-gradient(
-            40% 40% at 60% 0%,
-            rgba(37, 99, 235, 0.08) 0,
-            transparent 60%
-          ),
-          radial-gradient(
-            30% 30% at 0% 80%,
-            rgba(99, 102, 241, 0.08) 0,
-            transparent 60%
-          );
-        animation: bgFloat 24s linear infinite;
-        pointer-events: none;
-      }
-      @keyframes bgFloat {
-        to {
-          transform: translate3d(2%, -2%, 0) rotate(1deg);
-        }
-      }
-      .org-level {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 12px;
-      }
-      .org-row {
-        display: flex;
-        gap: 1rem;
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-      .org-card {
-        background: linear-gradient(135deg, #2563eb, #1d4ed8);
-        color: #fff;
-        padding: 0.9rem 1.1rem;
-        border-radius: 14px;
-        text-align: center;
-        min-width: 190px;
-        box-shadow: 0 10px 24px rgba(2, 6, 23, 0.18);
-        transition: transform 0.35s, box-shadow 0.35s, filter 0.35s;
-        position: relative;
-        isolation: isolate;
-      }
-      .org-card:hover {
-        transform: translateY(-6px) scale(1.02);
-        box-shadow: 0 16px 36px rgba(2, 6, 23, 0.28);
-        filter: saturate(1.1);
-      }
-      .org-card.alt {
-        background: linear-gradient(135deg, #3b82f6, #60a5fa);
-      }
-      .org-title {
-        font-weight: 700;
-        color: #1f2937;
-        text-align: center;
-        padding: 0.25rem 0.75rem;
-        border-radius: 12px;
-        line-height: 1.3;
-        background: rgba(99, 102, 241, 0.08);
-        border: 1px solid rgba(99, 102, 241, 0.18);
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
-      }
-      [data-level] {
-        opacity: 0;
-        transform: translateY(10px) scale(0.98);
-        animation: orgIn 0.6s forwards;
-      }
-      [data-level="1"] {
-        animation-delay: 0.05s;
-      }
-      [data-level="2"] {
-        animation-delay: 0.15s;
-      }
-      [data-level="3"] {
-        animation-delay: 0.25s;
-      }
-      [data-level="4"] {
-        animation-delay: 0.35s;
-      }
-      @keyframes orgIn {
-        to {
-          opacity: 1;
-          transform: translateY(0) scale(1);
-        }
-      }
-
-      /* Nom de Danis en couleur différente */
-      .org-card.me strong {
-        color: #facc15;
-        text-shadow: 0 0 6px rgba(250, 204, 21, 0.6);
-      }
-
-      /* =========================== PHOTO APPRENTI =========================== */
-      .photo-container {
-        float: right;
-        margin: 0 0 1.5rem 2rem;
-        max-width: 200px;
-        text-align: center;
-      }
-      .photo-container img {
-        width: 180px;
-        height: 180px;
-        object-fit: cover;
-        border-radius: 50%;
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-        transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1),
-          box-shadow 0.45s, filter 0.35s;
-        border: 6px solid rgba(255, 255, 255, 0.9);
-        background: linear-gradient(
-          180deg,
-          rgba(255, 255, 255, 0.6),
-          rgba(255, 255, 255, 0.2)
-        );
-      }
-      .photo-container img.loaded {
-        opacity: 1;
-        transform: none;
-        transition: opacity 0.6s ease, transform 0.6s ease;
-      }
-      .photo-container img:hover {
-        transform: scale(1.05);
-        box-shadow: 0 10px 28px rgba(59, 130, 246, 0.45),
-          0 0 0 8px rgba(59, 130, 246, 0.1);
-        filter: saturate(1.03);
-      }
-
-      /* =========================== CARDS =========================== */
-      .card {
-        background: linear-gradient(
-          135deg,
-          rgba(255, 255, 255, 0.85),
-          rgba(240, 244, 248, 0.85)
-        );
-        padding: 1.2rem 1.5rem;
-        border-radius: 16px;
-        margin-top: 1.2rem;
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
-        transition: transform 0.3s, box-shadow 0.3s;
-        backdrop-filter: blur(8px) saturate(130%);
-        border: 1px solid rgba(255, 255, 255, 0.6);
-      }
-      .card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
-      }
-
-      /* =========================== MISSIONS =========================== */
-      .mission-section {
-        display: flex;
-        flex-direction: column;
-        gap: 0.8rem;
-      }
-      .mission-card {
-        position: relative;
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        background: linear-gradient(
-          135deg,
-          rgba(224, 242, 254, 0.85),
-          rgba(186, 230, 253, 0.85)
-        );
-        padding: 1rem 1.4rem;
-        margin-bottom: 1rem;
-        border-radius: 18px;
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
-        transition: all 0.3s;
-        text-decoration: none;
-        color: #111827;
-        backdrop-filter: blur(6px) saturate(120%);
-        border: 1px solid rgba(255, 255, 255, 0.6);
-      }
-      .mission-card:hover {
-        transform: translateY(-5px) scale(1.02);
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
-        background: linear-gradient(135deg, #60a5fa, #3b82f6);
-        color: #fff;
-      }
-      .mission-card img {
-        width: 42px;
-        height: 42px;
-        transition: transform 0.3s;
-      }
-      .mission-card:hover img {
-        transform: scale(1.1);
-      }
-      .mission-card span {
-        font-weight: 600;
-      }
-
-      /* affichage discret du code sous le titre */
-      .mission-card small {
-        display: block;
-        font-size: 0.75rem;
-        opacity: 0.75;
-        margin-top: 2px;
-        font-weight: 400;
-      }
-
-      .mission-card .ripple {
-        background: rgba(255, 255, 255, 0.45);
-      }
-
-      /* =========================== ACCUEIL =========================== */
-      .welcome {
-        text-align: center;
-        padding: 3rem 1.5rem;
-        background: linear-gradient(
-          135deg,
-          rgba(239, 246, 255, 0.85),
-          rgba(224, 242, 254, 0.85)
-        );
-        border-radius: 20px;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-        margin-bottom: 1.5rem;
-        backdrop-filter: blur(6px);
-        border: 1px solid rgba(255, 255, 255, 0.6);
-      }
-      .welcome h2 {
-        font-size: 2.5rem;
-        margin-bottom: 1rem;
-        color: #1e3a8a;
-      }
-      .welcome p {
-        font-size: 1.1rem;
-        max-width: 900px;
-        margin: 0.5rem auto;
-        color: #0f172a;
-      }
-      .welcome-links {
-        margin-top: 2rem;
-        display: flex;
-        justify-content: center;
-        gap: 0.8rem;
-        flex-wrap: wrap;
-      }
-      .welcome-links a {
-        display: inline-block;
-        padding: 0.6rem 1rem;
-        border-radius: 10px;
-        background: #2563eb;
-        color: white;
-        font-weight: 600;
-        text-decoration: none;
-        transition: transform 0.2s, box-shadow 0.2s;
-        position: relative;
-        overflow: hidden;
-      }
-      .welcome-links a:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 22px rgba(37, 99, 235, 0.18);
-      }
-
-      /* =========================== BOUTON HAUT DE PAGE =========================== */
-      #backToTop {
-        position: fixed;
-        right: 18px;
-        bottom: 18px;
-        width: 44px;
-        height: 44px;
-        border-radius: 999px;
-        border: none;
-        background: #2563eb;
-        color: #fff;
-        font-size: 20px;
-        box-shadow: 0 10px 24px rgba(37, 99, 235, 0.35);
-        display: grid;
-        place-items: center;
-        cursor: pointer;
-        opacity: 0;
-        transform: translateY(8px);
-        pointer-events: none;
-        transition: 0.25s;
-        z-index: 999;
-      }
-      #backToTop.show {
-        opacity: 1;
-        transform: none;
-        pointer-events: auto;
-      }
-      #backToTop:hover {
-        filter: brightness(1.05);
-        transform: translateY(-2px);
-      }
-
-      /* =========================== ENCART TÉLÉCHARGEMENTS =========================== */
-      .downloads {
-        margin-top: 1.25rem;
-        padding: 1rem 1.2rem;
-        border-radius: 14px;
-        background: rgba(59, 130, 246, 0.08);
-        border: 1px dashed rgba(59, 130, 246, 0.3);
-      }
-      .downloads h4 {
-        margin: 0 0 0.5rem 0;
-        color: #1e3a8a;
-      }
-      .downloads ul {
-        margin: 0;
-        padding-left: 1.2rem;
-      }
-      .downloads a {
-        font-weight: 600;
-      }
-
-      /* =========================== BARRE JURY FLOTTANTE =========================== */
-      #jury-controls {
-        position: fixed;
-        left: 16px;
-        bottom: 16px;
-        z-index: 1001;
-        display: none;
-        align-items: center;
-        gap: 8px;
-        background: rgba(37, 99, 235, 0.28);
-        border: 1px solid rgba(96, 165, 250, 0.6);
-        box-shadow: 0 10px 28px rgba(37, 99, 235, 0.35);
-        backdrop-filter: blur(8px);
-        padding: 0.45rem 0.6rem;
-        border-radius: 14px;
-        animation: popIn 0.25s ease-out;
-      }
-      #jury-controls button {
-        background: rgba(255, 255, 255, 0.85);
-        color: #0f172a;
-        border: none;
-        border-radius: 10px;
-        cursor: pointer;
-        padding: 0.45rem 0.6rem;
-        font-weight: 700;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-        transition: 0.2s;
-        min-width: 38px;
-      }
-      #jury-controls button:hover {
-        transform: translateY(-1px);
-      }
-      #jury-controls .quit {
-        background: #ef4444;
-        color: #fff;
-      }
-      @keyframes popIn {
-        from {
-          transform: translateY(6px);
-          opacity: 0;
-        }
-        to {
-          transform: none;
-          opacity: 1;
-        }
-      }
-
-      /* =========================== PRINT =========================== */
-      @media print {
-        nav,
-        .welcome-links,
-        .org-card,
-        #backToTop,
-        .progress-bar,
-        #intro-screen,
-        #bg-network,
-        .actions,
-        #jury-controls {
-          display: none !important;
-        }
-        body {
-          background: white;
-          color: black;
-        }
-        main {
-          padding: 0;
-        }
-      }
-
-      /* =========================== MODE SOMBRE =========================== */
-      body[data-theme="dark"] {
-        --grad1: #0b1220;
-        --grad2: #0f172a;
-        --grad3: #0b1220;
-        --grad4: #111827;
-        color: #e5e7eb;
-      }
-      body[data-theme="dark"] h2,
-      body[data-theme="dark"] h3,
-      body[data-theme="dark"] p,
-      body[data-theme="dark"] li {
-        color: #e5e7eb;
-      }
-      body[data-theme="dark"] h2 {
-        border-bottom-color: #334155;
-      }
-      body[data-theme="dark"] a {
-        color: #60a5fa;
-      }
-      body[data-theme="dark"] a:hover {
-        color: #93c5fd;
-      }
-      body[data-theme="dark"] header {
-        background: rgba(15, 23, 42, 0.6);
-      }
-      body[data-theme="dark"] nav {
-        background: rgba(17, 24, 39, 0.55);
-      }
-      body[data-theme="dark"] nav > ul > li > a {
-        background: rgba(31, 41, 55, 0.65);
-        color: #e5e7eb;
-      }
-      body[data-theme="dark"] nav > ul > li:hover > a {
-        background: #2563eb;
-      }
-      body[data-theme="dark"] nav ul ul {
-        background: rgba(31, 41, 55, 0.9);
-      }
-      body[data-theme="dark"] .welcome {
-        background: linear-gradient(
-          135deg,
-          rgba(11, 18, 32, 0.85),
-          rgba(15, 23, 42, 0.85)
-        );
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-      }
-      body[data-theme="dark"] .card {
-        background: linear-gradient(
-          135deg,
-          rgba(16, 24, 39, 0.85),
-          rgba(15, 23, 42, 0.85)
-        );
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
-      }
-      body[data-theme="dark"] .mission-card {
-        background: linear-gradient(
-          135deg,
-          rgba(30, 58, 138, 0.85),
-          rgba(30, 64, 175, 0.85)
-        );
-        color: #e5e7eb;
-      }
-      body[data-theme="dark"] .mission-card:hover {
-        background: linear-gradient(135deg, #3b82f6, #2563eb);
-        color: #fff;
-      }
-      body[data-theme="dark"] .organigramme {
-        background: linear-gradient(
-          180deg,
-          rgba(11, 18, 32, 0.65) 0%,
-          rgba(15, 23, 42, 0.65) 100%
-        );
-        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.6),
-          inset 0 1px 0 rgba(255, 255, 255, 0.05);
-      }
-      body[data-theme="dark"] .org-title {
-        color: #e5e7eb;
-        background: rgba(99, 102, 241, 0.12);
-        border-color: rgba(99, 102, 241, 0.25);
-      }
-
-      /* =========================== MAP (Leaflet) =========================== */
-      .map-wrap {
-        margin-top: 1.25rem;
-      }
-      .map-title {
-        font-weight: 700;
-        color: #1f2937;
-        margin-bottom: 0.5rem;
-        font-size: 1rem;
-        opacity: 0.9;
-      }
-      #map-cf {
-        width: 100%;
-        height: 380px;
-        border-radius: 16px;
-        border: 1px solid rgba(0, 0, 0, 0.08);
-        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
-        overflow: hidden;
-      }
-      body[data-theme="dark"] .map-title {
-        color: #e5e7eb;
-      }
-      body[data-theme="dark"] #map-cf {
-        border-color: rgba(255, 255, 255, 0.08);
-        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.55);
-      }
-
-      /* ===== Veille : disposition légère ===== */
-      .veille-wrap {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-      }
-      .veille-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem;
-      }
-      @media (max-width: 900px) {
-        .veille-grid {
-          grid-template-columns: 1fr;
-        }
-      }
-
-      /* ===== Certifications : grille ===== */
-      .cert-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem;
-        margin-top: 1rem;
-      }
-      @media (max-width: 900px) {
-        .cert-grid {
-          grid-template-columns: 1fr;
-        }
-      }
-      .cert-title {
-        margin: 0 0 0.6rem 0;
-      }
-      .cert-preview {
-        width: 100%;
-        border-radius: 12px;
-        overflow: hidden;
-        border: 1px solid rgba(0, 0, 0, 0.08);
-        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
-        background: rgba(255, 255, 255, 0.55);
-      }
-      body[data-theme="dark"] .cert-preview {
-        border-color: rgba(255, 255, 255, 0.08);
-        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.55);
-        background: rgba(15, 23, 42, 0.35);
-      }
-      .cert-preview object {
-        width: 100%;
-        height: 520px;
-        border: none;
-        border-radius: 12px;
-      }
-      .cert-preview img {
-        width: 100%;
-        height: auto;
-        display: block;
-      }
-    </style>
-  </head>
-
-  <body>
-    <!-- CANVAS RÉSEAU -->
-    <canvas id="bg-network" aria-hidden="true"></canvas>
-
-    <!-- Barre de progression -->
-    <div class="progress-bar" id="progress"></div>
-
-    <!-- INTRO SCREEN -->
-    <div id="intro-screen" aria-hidden="true">
-      <!-- Logo DG bleu électrique -->
-      <svg id="intro-logo" viewBox="0 0 128 128" aria-hidden="true">
-        <defs>
-          <filter id="g" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="4" result="b" />
-            <feMerge>
-              <feMergeNode in="b" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-          <linearGradient id="lg" x1="0" x2="1">
-            <stop offset="0" stop-color="#22aaff" />
-            <stop offset="1" stop-color="#60a5fa" />
-          </linearGradient>
-        </defs>
-        <rect rx="24" ry="24" width="128" height="128" fill="#000" />
-        <text
-          x="50%"
-          y="50%"
-          text-anchor="middle"
-          dominant-baseline="central"
-          font-family="Inter, system-ui, sans-serif"
-          font-weight="800"
-          font-size="76"
-          fill="url(#lg)"
-          filter="url(#g)"
-        >
-          DG
-        </text>
-      </svg>
-
-      <div id="intro-content">Danis Gouedart</div>
-
-      <div id="intro-actions">
-        <button id="intro-skip" aria-label="Passer l'intro">Passer</button>
-        <button id="intro-disable" aria-label="Ne plus afficher l'intro">
-          Ne plus afficher l’intro
-        </button>
-      </div>
-    </div>
-
-    <header>
-      <div class="logo-wrap" aria-hidden="true">
-        <!-- Logo header -->
-        <svg width="40" height="40" viewBox="0 0 128 128">
-          <defs>
-            <linearGradient id="lg2" x1="0" x2="1">
-              <stop offset="0" stop-color="#22aaff" />
-              <stop offset="1" stop-color="#60a5fa" />
-            </linearGradient>
-          </defs>
-          <rect rx="14" ry="14" width="128" height="128" fill="#000" />
-          <text
-            x="50%"
-            y="50%"
-            text-anchor="middle"
-            dominant-baseline="central"
-            font-family="Inter, system-ui, sans-serif"
-            font-weight="800"
-            font-size="70"
-            fill="url(#lg2)"
-          >
-            DG
-          </text>
-        </svg>
-
-        <h1>Portfolio Danis Gouedart</h1>
-      </div>
-    </header>
-
-    <nav aria-label="Navigation principale" class="tap-bump">
-      <ul>
-        <li><a href="#" data-target="accueil">Accueil</a></li>
-
-        <li>
-          <a href="#" aria-haspopup="true">Présentation</a>
-          <ul>
-            <li>
-              <a href="#" data-target="presentation_apprenti"
-                >Présentation de l’apprenti</a
-              >
-            </li>
-            <li>
-              <a href="#" data-target="presentation_entreprise"
-                >Présentation de l’entreprise</a
-              >
-            </li>
-          </ul>
-        </li>
-
-        <li>
-          <a href="#" aria-haspopup="true">Épreuve E5</a>
-          <ul>
-            <li>
-              <a href="#" data-target="epreuveE5_synthese"
-                >Tableau de synthèse</a
-              >
-            </li>
-            <li>
-              <a href="#" data-target="epreuveE5_formation"
-                >Missions réalisées en formation</a
-              >
-            </li>
-            <li>
-              <a href="#" data-target="epreuveE5_entreprise"
-                >Missions réalisées en entreprise</a
-              >
-            </li>
-            <li>
-              <a href="#" data-target="epreuveE5_certifications"
-                >Certifications</a
-              >
-            </li>
-          </ul>
-        </li>
-
-        <li>
-          <a href="#" aria-haspopup="true">Épreuve E6</a>
-          <ul>
-            <li>
-              <a href="#" data-target="epreuveE6_situation"
-                >Situation professionnelle</a
-              >
-            </li>
-            <li>
-              <a href="#" data-target="epreuveE6_production"
-                >Production associée</a
-              >
-            </li>
-          </ul>
-        </li>
-
-        <li><a href="#" data-target="veille">Veille technologique</a></li>
-      </ul>
-
-      <div class="actions">
-        <button
-          id="presentation-mode"
-          class="btn"
-          aria-label="Mode Présentation Jury"
-        >
-          🎤 Présentation
-        </button>
-
-        <button
-          id="theme-toggle"
-          class="theme-toggle"
-          aria-label="Basculer le thème"
-        >
-          <div class="thumb">🌙</div>
-        </button>
-      </div>
-    </nav>
-
-    <main id="main">
-      <section id="accueil" class="active" aria-labelledby="accueil-title">
-        <div class="welcome reveal" role="region" aria-label="Section d'accueil">
-          <h2 id="accueil-title">Bienvenue</h2>
-          <p>
-            Bienvenue sur mon portfolio. Naviguez à travers les onglets ci-dessus
-            pour découvrir mon parcours, mes compétences et mes projets.
-          </p>
-
-          <div
-            class="welcome-links"
-            role="navigation"
-            aria-label="Liens rapides"
-          >
-            <a href="#" data-target="presentation_apprenti"
-              >Présentation apprenti</a
-            >
-            <a href="#" data-target="presentation_entreprise"
-              >Présentation entreprise</a
-            >
-            <a href="#" data-target="epreuveE5_synthese"
-              >Tableau de synthèse</a
-            >
-            <a href="#" data-target="epreuveE5_formation"
-              >Missions réalisées en formation</a
-            >
-            <a href="#" data-target="epreuveE5_entreprise"
-              >Missions réalisées en entreprise</a
-            >
-          </div>
-        </div>
-      </section>
-
-      <section id="presentation_apprenti" aria-labelledby="apprenti-title">
-        <h2 id="apprenti-title">Présentation de l’apprenti</h2>
-
-        <div class="photo-container" aria-hidden="false">
-          <img
-            src="photo_danis.jpg"
-            alt="Photo de Danis Gouedart"
-            loading="lazy"
-          />
-        </div>
-
-        <p>
-          Je suis Danis Gouedart, étudiant en BTS SIO option SISR à Montsouris.
-          Passionné par les systèmes, réseaux et la cybersécurité.
-        </p>
-
-        <h3>Mon parcours scolaire :</h3>
-        <p>
-          Baccalauréat professionnel Systèmes numériques option SISR obtenu en
-          2023, suivi du BTS SIO option SISR au CFA Campus Montsouris.
-        </p>
-
-        <h3>Mon parcours professionnel :</h3>
-        <p>
-          Alternant à la Comédie-Française au sein de la DSI, où j’assure
-          l’installation, la maintenance et la sécurité des systèmes
-          informatiques.
-        </p>
-
-        <div class="competences">
-          <h3>Compétences informatiques :</h3>
-          <ul>
-            <li>
-              Administration système (Windows Server 2022, Active Directory)
-            </li>
-            <li>
-              Administration Microsoft 365 (utilisateurs, boîtes mail, groupes,
-              etc.)
-            </li>
-            <li>Réseaux et configuration DHCP, DNS, routage</li>
-            <li>Sécurité informatique (pare-feu, sauvegarde, audit)</li>
-            <li>Virtualisation (VirtualBox, Proxmox, VMware)</li>
-          </ul>
-        </div>
-
-        <h3>Contact :</h3>
-        <p>
-          Email : danis.gouedart@gmail.com<br />Téléphone : 07 68 56 40 00
-        </p>
-
-        <p>
-          <a
-            href="https://1drv.ms/b/c/3c089fa1bf123036/EcVjais7IoNOmCaSWsIxfMUBmC3raWLkOnXTnz_uZcBzjQ?e=RO0rUr"
-            target="_blank"
-            >Voir mon CV (PDF)</a
-          >
-        </p>
-        <p>
-          <a
-            href="https://www.linkedin.com/public-profile/settings?trk=d_flagship3_profile_self_view_public_profile"
-            target="_blank"
-            >Voir mon profil LinkedIn</a
-          >
-        </p>
-      </section>
-
-      <section id="presentation_entreprise" aria-labelledby="entreprise-title">
-        <h2 id="entreprise-title">Présentation de l’entreprise</h2>
-
-        <p>
-          La Comédie-Française, fondée en 1680, est l’une des plus anciennes
-          institutions culturelles de France, située au cœur de Paris, dans le
-          1er arrondissement. Elle joue un rôle majeur dans la diffusion du
-          théâtre classique et contemporain.
-        </p>
-
-        <h3>Chiffres clés :</h3>
-        <ul>
-          <li>Plus de 400 employés (administration, technique et artistique)</li>
-          <li>Chiffre d’affaires annuel : environ 60 millions d’euros</li>
-          <li>Plus de 250 représentations par an</li>
-          <li>
-            Rayonnement national et international avec tournées et partenariats
-          </li>
-        </ul>
-
-        <h3>Structure et missions :</h3>
-        <p>
-          La DSI assure la sécurité, la maintenance, le déploiement et
-          l’innovation des systèmes informatiques. Les alternants participent à
-          des projets réels et aux opérations de sécurisation du réseau et des
-          données.
-        </p>
-
-        <h3>Missions de la DSI et outils utilisés :</h3>
-        <ul>
-          <li>
-            <strong>Support aux utilisateurs et helpdesk :</strong> prise en
-            charge des incidents, demandes de services, installation de
-            logiciels, assistance à distance et accompagnement au quotidien.
-            <em
-              >Outils : suite Microsoft 365, prise en main à distance (AnyDesk),
-              messagerie Outlook, téléphone IP.</em
-            >
-          </li>
-          <li>
-            <strong>Gestion du parc informatique :</strong> inventaire et suivi
-            des postes, imprimantes, smartphones, tablettes, écrans et
-            périphériques, gestion des licences logicielles et renouvellements.
-            <em
-              >Outils : application Power Apps (gestion de parc), Microsoft Entra
-              ID, Active Directory, tableurs de suivi.</em
-            >
-          </li>
-          <li>
-            <strong>Administration systèmes :</strong> création et gestion des
-            comptes, groupes et droits d’accès, gestion des serveurs de fichiers,
-            d’impression et d’applications.
-            <em
-              >Outils : Windows Server, Active Directory, GPMC (stratégies de
-              groupe), services de fichiers, gestion des impressions, consoles
-              d’administration Microsoft.</em
-            >
-          </li>
-          <li>
-            <strong>Administration réseau :</strong> configuration des
-            commutateurs, routeurs et bornes Wi-Fi, gestion des VLAN, supervision
-            de la connectivité entre les sites et des liaisons Internet.
-            <em
-              >Outils : consoles d’administration des équipements réseau (Extreme
-              Networks), Wireshark, outils de supervision réseau (Zabbix),
-              portails Wi-Fi.</em
-            >
-          </li>
-          <li>
-            <strong>Sécurité et protection des données :</strong> mise en place
-            des politiques de sécurité, filtrage, mises à jour, contrôle des
-            accès, durcissement des postes et serveurs.
-            <em
-              >Outils : pare-feu/UTM, antivirus/EDR, solutions de chiffrement,
-              filtrage web, gestionnaire de mots de passe, journaux d’événements
-              Windows, outils d’audit.</em
-            >
-          </li>
-          <li>
-            <strong>Sauvegarde, continuité d’activité et restauration :</strong>
-            planification des sauvegardes des serveurs et données critiques,
-            tests de restauration, suivi de la capacité de stockage.
-            <em>Outils : NAS.</em>
-          </li>
-          <li>
-            <strong>Projets d’infrastructure et évolution du SI :</strong>
-            déploiement de nouveaux services (virtualisation, mise à jour d’OS,
-            migration de fichiers, intégration d’applications métiers),
-            documentation et procédures.
-            <em
-              >Outils : plateformes de virtualisation (VMware), éditeurs de
-              documentation (Word, Draw.io).</em
-            >
-          </li>
-          <li>
-            <strong>Sensibilisation et formation des utilisateurs :</strong>
-            ateliers, guides et procédures pour les bonnes pratiques de sécurité,
-            l’usage de OneDrive, de la messagerie, des outils collaboratifs et
-            des VPN.
-            <em
-              >Outils : présentations PowerPoint, supports PDF, intranet
-              d’entreprise, outils de webconférence (Teams).</em
-            >
-          </li>
-        </ul>
-
-        <!-- Organigramme mis à jour -->
-        <div class="organigramme" aria-hidden="false">
-          <div class="org-level">
-            <div class="org-card" data-level="1">
-              <strong>Marc Le Bihan</strong><br />Directeur DSI
-            </div>
-          </div>
-
-          <div class="org-level">
-            <div class="org-card" data-level="2">
-              <strong>Fabien Laverdat</strong><br />Adjoint DSI – Réseau &
-              Sécurité
-            </div>
-          </div>
-
-          <div class="org-level">
-            <div class="org-row">
-              <div class="org-card" data-level="3">
-                <strong>Étienne Chevalier</strong><br />Admin Système
-              </div>
-              <div class="org-card" data-level="3">
-                <strong>Michaël Djossou</strong><br />Admin Système
-              </div>
-              <div class="org-card" data-level="3">
-                <strong>Tania Nino</strong><br />Administratrice Parc
-                Informatique<br /><small
-                  >Responsable Santé des Données</small
-                >
-              </div>
-            </div>
-          </div>
-
-          <div class="org-level">
-            <div class="org-title">
-              Alternant Technicien IT • Direction des Systèmes d'Information
-            </div>
-            <div class="org-row">
-              <div class="org-card alt me" data-level="4">
-                <strong>Danis Gouedart</strong><br />Alternant Systèmes & Réseaux
-              </div>
-              <div class="org-card alt" data-level="4">
-                <strong>Raphaël Lobo</strong><br />Alternant Systèmes & Réseaux
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Localisation (carte claire) -->
-        <div class="map-wrap">
-          <div class="map-title">Localisation — Comédie-Française (carte)</div>
-          <div
-            id="map-cf"
-            role="region"
-            aria-label="Carte de localisation de la Comédie-Française"
-          ></div>
-        </div>
-      </section>
-
-      <section id="epreuveE5_synthese" aria-labelledby="e5s-title">
-        <h2 id="e5s-title">Épreuve E5 – Tableau de synthèse</h2>
-
-        <p>Tableau de synthèse des activités et compétences développées :</p>
-
-        <table
-          border="1"
-          style="
-            width: 100%;
-            border-collapse: collapse;
-            text-align: center;
-            margin-top: 1rem;
-          "
-        >
-          <tr style="background: #2563eb; color: #fff">
-            <th>Activité</th>
-            <th>Description</th>
-            <th>Compétences mobilisées</th>
-            <th>Outils utilisés</th>
-          </tr>
-          <tr>
-            <td>Installation NAS</td>
-            <td>Installation et configuration complète de OpenMediaVault</td>
-            <td>Gestion stockage, permissions, sauvegardes</td>
-            <td>OpenMediaVault, Iperius Backup</td>
-          </tr>
-          <tr>
-            <td>Configuration DHCP</td>
-            <td>Mise en place du service DHCP et tests réseau</td>
-            <td>Réseaux, IP statiques et dynamiques, routage</td>
-            <td>Windows Server, Wireshark</td>
-          </tr>
-          <tr>
-            <td>Sauvegarde & restauration</td>
-            <td>
-              Déploiement de procédures de sauvegarde et restauration avec Iperius
-              Backup
-            </td>
-            <td>Sécurité, administration, audit</td>
-            <td>Iperius Backup</td>
-          </tr>
-          <tr>
-            <td>Gestion Active Directory</td>
-            <td>Création de comptes, groupes et gestion des droits</td>
-            <td>Administration Windows, sécurité</td>
-            <td>Windows Server, Active Directory</td>
-          </tr>
-          <tr>
-            <td>Sécurité parc informatique</td>
-            <td>Audit, mise à jour, sécurisation et surveillance réseau</td>
-            <td>Sécurité informatique, supervision</td>
-            <td>Wireshark, antivirus, pare-feu</td>
-          </tr>
-        </table>
-
-        <!-- Lien Excel du tableau de synthèse -->
-        <div class="downloads">
-          <h4>📎 Téléchargements</h4>
-          <ul>
-            <li>
-              <a
-                href="https://cerfal-my.sharepoint.com/:x:/r/personal/d_gouedart_cfacampusmontsouris_fr/Documents/6-%20Annexe%206-1%20-%20Tableau%20de%20synth%C3%A8se%20-%20Epreuve%20E4%20-%20BTS%20SIO%202023(1)%201%20(1)%201%20(1).xlsx?d=w7e17be3aaae74b8ab48284ea5029cac5&csf=1&web=1&e=MBAwnh"
-                target="_blank"
-                style="display: block; margin-top: 6px; font-weight: 600"
-              >
-                Ouvrir le tableau de synthèse en ligne (OneDrive)
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <section id="epreuveE5_formation" aria-labelledby="e5f-title">
-        <h2 id="e5f-title">Missions réalisées en formation</h2>
-
-        <div class="mission-section">
-          <a
-            href="https://1drv.ms/b/c/3c089fa1bf123036/EfG95I9G5L5Jn8XApEhicGYBrEdwdzm9DXMFw1PshJVRCw?e=5zoAZj"
-            class="mission-card tap-bump"
-            download
-            target="_blank"
-          >
-            <span>
-              Découverte et présentation des réseaux sans-fil Wi-Fi / Bluetooth
-              <small>MF 01</small>
-            </span>
-          </a>
-
-          <a
-            href="https://1drv.ms/b/c/3c089fa1bf123036/EZR4RKk8IDBOqDHdPqVyZ2cBMVhIKTpKDyD1MzVyZghdIg?e=EOxzDG"
-            class="mission-card tap-bump"
-            download
-            target="_blank"
-          >
-            <span>
-              Étude et mise en œuvre des protocoles ICMP et ARP
-              <small>MF 02</small>
-            </span>
-          </a>
-
-          <!-- MAJ lien -->
-          <a
-            href="https://1drv.ms/w/c/3c089fa1bf123036/IQBtBpSAuc7xR4iT7JRTzoKeAdJPT8hKuz_n9NEeq-Tb6RE?e=KH5oN2"
-            class="mission-card tap-bump"
-            download
-            target="_blank"
-          >
-            <span>
-              Utilisation du gestionnaire de disques et gestion du stockage
-              <small>MF 03</small>
-            </span>
-          </a>
-
-          <!-- MAJ lien -->
-          <a
-            href="https://1drv.ms/w/c/3c089fa1bf123036/IQCTsV81F6kLTp2wRbNRq1MCAbmmaHz-zvPS3grx4raJ3U4?e=FMqqRH"
-            class="mission-card tap-bump"
-            download
-            target="_blank"
-          >
-            <span>
-              Configuration complète d’un service DHCP
-              <small>MF 04</small>
-            </span>
-          </a>
-
-          <!-- MAJ lien -->
-          <a
-            href="https://1drv.ms/w/c/3c089fa1bf123036/IQA2S8VffMbjRLS-JN_w9v2RAQqW6VdmstJWfjGaY_gYb7k?e=AQJbMC"
-            class="mission-card tap-bump"
-            download
-            target="_blank"
-          >
-            <span>
-              Mise en place et tests d’un atelier ACL (contrôle d’accès)
-              <small>MF 05</small>
-            </span>
-          </a>
-
-          <!-- Mission formation 6 (GLPI) -->
-          <a
-            href="https://cerfal-my.sharepoint.com/:w:/r/personal/d_gouedart_cfacampusmontsouris_fr/Documents/mission%20formation%206.docx?d=w6996f59592164a9c81257823b778fa1d&csf=1&web=1&e=QtwEXM"
-            class="mission-card tap-bump"
-            download
-            target="_blank"
-          >
-            <span>
-              Mise en place d’un serveur GLPI (outil de ticketing et gestion de
-              parc)
-              <small>MF 06</small>
-            </span>
-          </a>
-
-          <!-- AJOUT MF 07 -->
-          <a
-            href="https://1drv.ms/w/c/3c089fa1bf123036/IQDGHVIGhCkVR5Pun0au8OOgAesjTlM89LPyLcuiv55pR-k?e=hPqDYb"
-            class="mission-card tap-bump"
-            target="_blank"
-            rel="noopener"
-            title="Installation web (MF 07)"
-          >
-            <span>
-              Installation web
-              <small>MF 07</small>
-            </span>
-          </a>
-
-          <!-- AJOUT MF 08 -->
-          <a
-            href="https://1drv.ms/w/c/3c089fa1bf123036/IQDIIKk25M1PS6rekRjsA4gaATIcFYdTlXDpXVQA2M68nAY?e=8DSKVx"
-            class="mission-card tap-bump"
-            target="_blank"
-            rel="noopener"
-            title="Déploiement site (MF 08)"
-          >
-            <span>
-              Déploiement site
-              <small>MF 08</small>
-            </span>
-          </a>
-        </div>
-      </section>
-
-      <section id="epreuveE5_entreprise" aria-labelledby="e5e-title">
-        <h2 id="e5e-title">Missions réalisées en entreprise</h2>
-
-        <div class="mission-section">
-          <a
-            href="https://cerfal-my.sharepoint.com/:w:/r/personal/d_gouedart_cfacampusmontsouris_fr/Documents/entreprise%2012%201.docx?d=w90a30c0cbc394721950a2f1395ea5492&csf=1&web=1&e=OvRimI"
-            class="mission-card tap-bump"
-            download
-            target="_blank"
-            rel="noopener"
-            title="Installation et configuration de matériel informatique (PC, imprimante, écrans)"
-          >
-            <span>
-              Installation et configuration de matériel informatique (PC,
-              imprimantes, écrans)
-              <small>ME 01</small>
-            </span>
-          </a>
-
-          <a
-            href="https://cerfal-my.sharepoint.com/:w:/r/personal/d_gouedart_cfacampusmontsouris_fr/Documents/Entreprise%202.docx?d=w4697b874160c4df4a59650f93e2d62d8&csf=1&web=1&e=SmCYV4"
-            class="mission-card tap-bump"
-            download
-            target="_blank"
-            rel="noopener"
-            title="Gestion des comptes utilisateurs (Active Directory)"
-          >
-            <span>
-              Gestion des comptes utilisateurs dans Active Directory
-              <small>ME 02</small>
-            </span>
-          </a>
-
-          <a
-            href="https://cerfal-my.sharepoint.com/:w:/r/personal/d_gouedart_cfacampusmontsouris_fr/Documents/Entreprise%203.docx?d=wf93901cf04c245c19da931f85cbad48e&csf=1&web=1&e=R1CYxe"
-            class="mission-card tap-bump"
-            download
-            target="_blank"
-            rel="noopener"
-            title="Formation des utilisateurs aux outils (OneDrive, KeePass, interface entreprise)"
-          >
-            <span>
-              Formation des utilisateurs aux outils informatiques (OneDrive,
-              KeePass, outils internes)
-              <small>ME 03</small>
-            </span>
-          </a>
-
-          <a
-            href="https://cerfal-my.sharepoint.com/:w:/r/personal/d_gouedart_cfacampusmontsouris_fr/Documents/Entreprise%204.docx?d=w80d25d3b00cd4c9aab9646db3ac62af7&csf=1&web=1&e=AVKrtG"
-            class="mission-card tap-bump"
-            download
-            target="_blank"
-            rel="noopener"
-            title="Gestion du parc informatique (inventaire, suivi, licences)"
-          >
-            <span>
-              Gestion du parc informatique et des licences logicielles
-              <small>ME 04</small>
-            </span>
-          </a>
-
-          <a
-            href="https://cerfal-my.sharepoint.com/:w:/r/personal/d_gouedart_cfacampusmontsouris_fr/Documents/Entreprise%205.docx?d=wb6ccdd7ed8174747865d97757778115c&csf=1&web=1&e=e28FSd"
-            class="mission-card tap-bump"
-            download
-            target="_blank"
-            rel="noopener"
-            title="Rédaction d’une procédure pour les utilisateurs en télétravail et en mobilité"
-          >
-            <span>
-              Rédaction de procédures pour les utilisateurs en télétravail et en
-              mobilité
-              <small>ME 05</small>
-            </span>
-          </a>
-
-          <!-- MAJ lien ME 06 -->
-          <a
-            href="https://cerfal-my.sharepoint.com/:w:/r/personal/d_gouedart_cfacampusmontsouris_fr/Documents/entreprise%2012%201.docx?d=w90a30c0cbc394721950a2f1395ea5492&csf=1&web=1&e=qUisAQ"
-            class="mission-card tap-bump"
-            download
-            target="_blank"
-            rel="noopener"
-            title="Résolution d’un problème de réseau général"
-          >
-            <span>
-              Résolution d’incidents réseau et support informatique
-              <small>ME 06</small>
-            </span>
-          </a>
-
-          <!-- MAJ lien ME07 -->
-          <a
-            href="https://1drv.ms/w/c/3c089fa1bf123036/IQDlQ208AMXPSq_TfIDK29DrAUVukWj8W97WvtA3FijEO30?e=OdtCbo"
-            class="mission-card tap-bump"
-            target="_blank"
-            rel="noopener"
-            title="Intégration et configuration d’outils de téléphonie mobile (iOS / Android)"
-          >
-            <span>
-              Intégration et configuration d’outils de téléphonie mobile (iOS et
-              Android)
-              <small>ME 07</small>
-            </span>
-          </a>
-
-          <!-- AJOUT (AVEC LIEN) ME08 -->
-          <a
-            href="https://1drv.ms/w/c/3c089fa1bf123036/IQBsP_jCTEZuTLRBgzyyeeAaAR4EpMIWjg7eWEdliPaP3n0?e=SGG0NC"
-            class="mission-card tap-bump"
-            target="_blank"
-            rel="noopener"
-            title="Participation active aux instances de pilotage Microsoft"
-          >
-            <span>
-              Participation active aux instances de pilotage Microsoft pour
-              l’optimisation continue de l’environnement
-              <small>ME 08</small>
-            </span>
-          </a>
-
-          <!-- AJOUT (AVEC LIEN) Mission 9 -->
-          <a
-            href="https://1drv.ms/w/c/3c089fa1bf123036/IQCfDwF0bCxjQrhASojoZ7z0AZ7pvviZVFHqTeJIjci3nG8?e=gZGFWU"
-            class="mission-card tap-bump"
-            target="_blank"
-            rel="noopener"
-            title="Vérification et gestion des droits d’accès sur un serveur de fichiers (NAS)"
-          >
-            <span>
-              Vérification et gestion des droits d’accès sur un serveur de
-              fichiers (NAS)
-              <small>ME 09</small>
-            </span>
-          </a>
-        </div>
-      </section>
-
-      <section id="epreuveE5_certifications" aria-labelledby="e5c-title">
-        <h2 id="e5c-title">Certifications obtenues</h2>
-
-        <div class="cert-grid">
-          <div class="card">
-            <h3 class="cert-title">CNIL – MOOC RGPD (Attestation)</h3>
-            <a
-              href="https://1drv.ms/i/c/3c089fa1bf123036/IQDbnbQJXXB2TbqGTsG2wY5AAbf2_gea5ppv2eg5dw--8VQ?e=M6DhZi"
-              target="_blank"
-              rel="noopener"
-              class="cert-preview"
-              aria-label="Ouvrir la certification CNIL – MOOC RGPD"
-            >
-              <img
-                src="Certifica_RGPD.png"
-                alt="Certification CNIL – MOOC RGPD"
-                loading="lazy"
-              />
-            </a>
-          </div>
-
-          <div class="card">
-            <h3 class="cert-title">
-              CNIL – MOOC RGPD : Module 2 – Les principes de la protection des
-              données
-            </h3>
-
-            <div class="cert-preview" aria-label="Aperçu image Module 2">
-              <img
-                src="Attestation_de_suivi_page-0001.png"
-                alt="Attestation CNIL – Module 2 – Les principes de la protection des données"
-                loading="lazy"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="epreuveE6_situation" aria-labelledby="e6s-title">
-        <h2 id="e6s-title">Épreuve E6 – Situation professionnelle</h2>
-        <p>
-          Développement d’une solution pour la gestion et la sécurisation du
-          réseau interne de la Comédie-Française.
-        </p>
-      </section>
-
-      <section id="epreuveE6_production" aria-labelledby="e6p-title">
-        <h2 id="e6p-title">Épreuve E6 – Production associée</h2>
-        <p>
-          Réalisation d’une documentation complète et de procédures détaillées
-          pour la maintenance et l’administration du réseau.
-        </p>
-      </section>
-
-      <section id="veille" aria-labelledby="veille-title">
-        <h2 id="veille-title">Veille technologique</h2>
-
-        <div class="veille-wrap">
-          <div class="card">
-            <p>
-              Thème : <strong>cybersécurité &amp; IA</strong> — comprendre comment
-              l’IA renforce les attaques (phishing, deepfakes, automatisation)
-              et comment les outils de défense s’adaptent.
-            </p>
-          </div>
-
-          <div class="veille-grid">
-            <div class="card">
-              <h3>Axes suivis</h3>
-              <ul>
-                <li><strong>Détection</strong> : EDR/XDR, NDR.</li>
-                <li><strong>Analyse</strong> : SIEM &amp; corrélation de logs.</li>
-                <li>
-                  <strong>Protection</strong> : anti-phishing / e-mail gateway.
-                </li>
-                <li><strong>Accès</strong> : MFA adaptatif, IAM.</li>
-              </ul>
-            </div>
-
-            <div class="card">
-              <h3>Sources</h3>
-              <ul>
-                <li>
-                  <a
-                    href="https://www.cert.ssi.gouv.fr/"
-                    target="_blank"
-                    rel="noopener"
-                    >ANSSI (CERT-FR)</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="https://learn.microsoft.com/fr-fr/security/"
-                    target="_blank"
-                    rel="noopener"
-                    >Microsoft Security</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="https://www.cisco.com/c/fr_fr/solutions/security.html"
-                    target="_blank"
-                    rel="noopener"
-                    >Cisco Security</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="https://www.crowdstrike.com/cybersecurity-101/"
-                    target="_blank"
-                    rel="noopener"
-                    >CrowdStrike (ressources)</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="https://www.ibm.com/topics/cybersecurity"
-                    target="_blank"
-                    rel="noopener"
-                    >IBM (articles)</a
-                  >
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="card">
-            <h3>Organisation</h3>
-            <ul>
-              <li>Lecture régulière + sélection des infos utiles.</li>
-              <li>Notes courtes : menace → impact → mesure de sécurité.</li>
-              <li>Synthèse : durcissement, MFA, segmentation, sensibilisation.</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <!-- Bouton haut de page -->
-    <button id="backToTop" aria-label="Revenir en haut">↑</button>
-
-    <!-- Barre Jury flottante -->
-    <div
-      id="jury-controls"
-      role="toolbar"
-      aria-label="Contrôles présentation jury"
-    >
-      <button id="jury-prev" title="Section précédente">⬅️</button>
-      <button id="jury-next" title="Section suivante">➡️</button>
-      <button id="jury-quit" class="quit" title="Quitter la présentation">
-        ❌
-      </button>
-    </div>
-
-    <footer
-      style="
-        max-width: 1100px;
-        margin: 2rem auto 3rem;
-        padding: 0 2rem;
-        color: #475569;
-        text-align: center;
-      "
-    >
-      <span id="sig"
-        >Site réalisé par <strong>Danis Gouedart</strong> — BTS SIO SISR — ©
-        2025</span
-      >
-    </footer>
-
-    <script>
-      // ========= Canvas Réseau (subtil, adaptatif au thème) =========
-      (function () {
-        const c = document.getElementById("bg-network");
-        const ctx = c.getContext("2d");
-        let w, h, DPR, nodes, links;
-
-        function resize() {
-          DPR = Math.min(window.devicePixelRatio || 1, 2);
-          w = (c.width = innerWidth * DPR);
-          h = (c.height = innerHeight * DPR);
-          c.style.width = innerWidth + "px";
-          c.style.height = innerHeight + "px";
-          initGraph();
-        }
-
-        function themeColors() {
-          const dark = document.body.dataset.theme === "dark";
-          return {
-            node: dark ? "rgba(56,132,255,0.85)" : "rgba(96,165,250,0.95)",
-            line: dark ? "rgba(37,99,235,0.22)" : "rgba(59,130,246,0.20)",
-            glow: dark ? "rgba(30,64,175,0.65)" : "rgba(96,165,250,0.55)",
-          };
-        }
-
-        function initGraph() {
-          const count = Math.round((innerWidth * innerHeight) / 22000);
-          nodes = [];
-
-          for (let i = 0; i < count; i++) {
-            nodes.push({
-              x: Math.random() * w,
-              y: Math.random() * h,
-              vx: (Math.random() - 0.5) * 0.18,
-              vy: (Math.random() - 0.5) * 0.18,
-              r: Math.random() * 2 + 1.2,
-            });
-          }
-
-          links = [];
-          for (let i = 0; i < nodes.length; i++) {
-            for (let j = i + 1; j < nodes.length; j++) {
-              const dx = nodes[i].x - nodes[j].x;
-              const dy = nodes[i].y - nodes[j].y;
-              const d2 = dx * dx + dy * dy;
-              const max = 180 * DPR;
-
-              if (d2 < max * max) links.push({ a: i, b: j });
-            }
-          }
-        }
-
-        function tick() {
-          const { node, line, glow } = themeColors();
-          ctx.clearRect(0, 0, w, h);
-          ctx.lineWidth = 1;
-
-          for (const L of links) {
-            const A = nodes[L.a],
-              B = nodes[L.b];
-            const d = Math.hypot(A.x - B.x, A.y - B.y);
-            const alpha = Math.max(0, 1 - d / (180 * DPR));
-            if (alpha <= 0) continue;
-
-            ctx.strokeStyle =
-              line.replace(/[\d.]+\)$/, "") + alpha.toFixed(3) + ")";
-            ctx.beginPath();
-            ctx.moveTo(A.x, A.y);
-            ctx.lineTo(B.x, B.y);
-            ctx.stroke();
-          }
-
-          for (const p of nodes) {
-            const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 10);
-            g.addColorStop(0, glow);
-            g.addColorStop(1, "rgba(0,0,0,0)");
-
-            ctx.fillStyle = g;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.r * 10, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.fillStyle = node;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-            ctx.fill();
-
-            p.x += p.vx;
-            p.y += p.vy;
-
-            if (p.x < -20) p.x = w + 20;
-            if (p.x > w + 20) p.x = -20;
-            if (p.y < -20) p.y = h + 20;
-            if (p.y > h + 20) p.y = -20;
-          }
-
-          requestAnimationFrame(tick);
-        }
-
-        window.addEventListener("resize", resize, { passive: true });
-        const mo = new MutationObserver(resize);
-        mo.observe(document.body, {
-          attributes: true,
-          attributeFilter: ["data-theme"],
-        });
-
-        resize();
-        tick();
-      })();
-
-      // ========= Ripple effect =========
-      function addRipple(e) {
-        const el = e.currentTarget;
-        const circle = document.createElement("span");
-        const rect = el.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height);
-
-        circle.className = "ripple";
-        circle.style.width = circle.style.height = size * 0.6 + "px";
-        circle.style.left = e.clientX - rect.left - (size * 0.6) / 2 + "px";
-        circle.style.top = e.clientY - rect.top - (size * 0.6) / 2 + "px";
-
-        el.appendChild(circle);
-        circle.addEventListener("animationend", () => circle.remove());
-      }
-
-      // ========= Navigation interne + sauvegarde dernière section + transition =========
-      const links = document.querySelectorAll("a[data-target]");
-      const sections = document.querySelectorAll("main section");
-      const navLinks = document.querySelectorAll("nav a[data-target]");
-
-      function activateSection(id) {
-        sections.forEach((s) => s.classList.remove("active"));
-
-        const targetSection = document.getElementById(id);
-        if (targetSection) {
-          targetSection.classList.add("active");
-          targetSection.classList.add("transition-enter");
-
-          requestAnimationFrame(() =>
-            targetSection.classList.add("transition-enter-active")
-          );
-
-          setTimeout(
-            () =>
-              targetSection.classList.remove(
-                "transition-enter",
-                "transition-enter-active"
-              ),
-            500
-          );
-
-          targetSection.scrollIntoView({ behavior: "smooth", block: "start" });
-
-          navLinks.forEach((a) =>
-            a.classList.toggle(
-              "active-link",
-              a.getAttribute("data-target") === id
-            )
-          );
-        }
-      }
-
-      links.forEach((link) => {
-        link.addEventListener(
-          "click",
-          (e) => {
-            e.preventDefault();
-            const targetId = link.getAttribute("data-target");
-            localStorage.setItem("lastSection", targetId);
-            activateSection(targetId);
-          },
-          { passive: false }
-        );
-
-        link.addEventListener("click", addRipple, { passive: true });
-        link.classList.add("tap-bump");
-      });
-
-      const last = localStorage.getItem("lastSection");
-      if (last && document.getElementById(last)) activateSection(last);
-
-      // ========= Thème sombre/clair (clair par défaut) =========
-      const toggle = document.getElementById("theme-toggle");
-      const thumb = toggle.querySelector(".thumb");
-      const storedTheme = localStorage.getItem("theme");
-
-      const applyTheme = (t) => {
-        document.body.dataset.theme = t;
-        localStorage.setItem("theme", t);
-        thumb.textContent = t === "dark" ? "☀️" : "🌙";
-        document.body.style.filter = "opacity(.98)";
-        setTimeout(() => (document.body.style.filter = ""), 200);
-      };
-
-      applyTheme(storedTheme === "dark" ? "dark" : "light");
-
-      toggle.addEventListener(
-        "click",
-        () => {
-          const next = document.body.dataset.theme === "dark" ? "light" : "dark";
-          applyTheme(next);
-        },
-        { passive: true }
-      );
-
-      // ========= Intro auto : ~2s puis fondu (sans audio) =========
-      const intro = document.getElementById("intro-screen");
-      const introSkip = document.getElementById("intro-skip");
-      const introDisable = document.getElementById("intro-disable");
-
-      function hideIntroNow() {
-        if (!intro || !document.body.contains(intro)) return;
-        intro.classList.add("intro-hidden");
-        setTimeout(() => {
-          if (document.body.contains(intro)) intro.remove();
-        }, 820);
-      }
-
-      (function initIntro() {
-        try {
-          if (
-            localStorage.getItem("introDisabled") === "true" ||
-            localStorage.getItem("introSeen") === "true"
-          ) {
-            if (intro) intro.remove();
-            return;
-          }
-        } catch (e) {}
-
-        window.addEventListener("DOMContentLoaded", () => {
-          setTimeout(() => {
-            hideIntroNow();
-            try {
-              localStorage.setItem("introSeen", "true");
-            } catch (e) {}
-          }, 2000);
-        });
-
-        if (introSkip)
-          introSkip.addEventListener(
-            "click",
-            () => {
-              hideIntroNow();
-              try {
-                localStorage.setItem("introSeen", "true");
-              } catch (e) {}
-            },
-            { passive: true }
-          );
-
-        if (introDisable)
-          introDisable.addEventListener(
-            "click",
-            () => {
-              try {
-                localStorage.setItem("introDisabled", "true");
-              } catch (e) {}
-              hideIntroNow();
-            },
-            { passive: true }
-          );
-
-        window.addEventListener("keydown", (e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            hideIntroNow();
-            try {
-              localStorage.setItem("introSeen", "true");
-            } catch (e) {}
-          }
-        });
-
-        window.addEventListener("load", () => {
-          setTimeout(() => {
-            if (document.body.contains(intro)) {
-              hideIntroNow();
-              try {
-                localStorage.setItem("introSeen", "true");
-              } catch (e) {}
-            }
-          }, 3000);
-        });
-      })();
-
-      // ========= Lazy fade-in images =========
-      const lazyImgs = document.querySelectorAll('img[loading="lazy"]');
-      const io = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add("loaded");
-              io.unobserve(entry.target);
-            }
-          });
-        },
-        { rootMargin: "100px" }
-      );
-      lazyImgs.forEach((img) => io.observe(img));
-
-      // ========= Scroll progress bar + Parallaxe + BackToTop =========
-      const progress = document.getElementById("progress");
-      const backToTop = document.getElementById("backToTop");
-
-      const onScroll = () => {
-        const scrollY = window.scrollY || document.documentElement.scrollTop;
-        const docH = document.documentElement.scrollHeight - window.innerHeight;
-        const percent = Math.max(0, Math.min(1, scrollY / (docH || 1)));
-
-        progress.style.width = percent * 100 + "%";
-
-        if (scrollY > 300) backToTop.classList.add("show");
-        else backToTop.classList.remove("show");
-
-        document.body.style.setProperty("--parallaxY", scrollY * 0.02 + "px");
-        document.body.style.setProperty("--parallaxX", scrollY * 0.01 + "px");
-      };
-
-      window.addEventListener("scroll", onScroll, { passive: true });
-      onScroll();
-
-      backToTop.addEventListener(
-        "click",
-        () => window.scrollTo({ top: 0, behavior: "smooth" }),
-        { passive: true }
-      );
-
-      // ========= Surbrillance menu selon section visible =========
-      const sectionObserver = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              const id = entry.target.id;
-
-              navLinks.forEach((a) => {
-                a.classList.toggle(
-                  "active-link",
-                  a.getAttribute("data-target") === id
-                );
-              });
-
-              const h2 = entry.target.querySelector("h2");
-              if (h2) {
-                h2.classList.add("inview");
-                setTimeout(() => h2.classList.remove("inview"), 1200);
-              }
-            }
-          });
-        },
-        { threshold: 0.55 }
-      );
-      sections.forEach((s) => sectionObserver.observe(s));
-
-      // ========= Mode Présentation Jury =========
-      const presBtn = document.getElementById("presentation-mode");
-      const juryBar = document.getElementById("jury-controls");
-      const juryPrev = document.getElementById("jury-prev");
-      const juryNext = document.getElementById("jury-next");
-      const juryQuit = document.getElementById("jury-quit");
-
-      let presOn = false;
-
-      const headerEl = document.querySelector("header");
-      const navEl = document.querySelector("nav");
-      const fullEl = document.documentElement;
-
-      const order = Array.from(document.querySelectorAll("main section")).map(
-        (s) => s.id
-      );
-
-      function currentSectionIndex() {
-        const active = document.querySelector("main section.active");
-        return Math.max(0, order.indexOf(active?.id || "accueil"));
-      }
-
-      function navigate(delta) {
-        const i = currentSectionIndex();
-        const nextIndex = Math.min(order.length - 1, Math.max(0, i + delta));
-        const nextId = order[nextIndex];
-        localStorage.setItem("lastSection", nextId);
-        activateSection(nextId);
-      }
-
-      function enterPresentation() {
-        presOn = true;
-
-        headerEl.style.opacity = "0";
-        navEl.style.opacity = "0";
-        headerEl.style.transform = "translateY(-10px)";
-        navEl.style.transform = "translateY(-10px)";
-
-        setTimeout(() => {
-          headerEl.style.display = "none";
-          navEl.style.display = "none";
-        }, 220);
-
-        document.querySelector(".progress-bar").style.display = "none";
-        document.getElementById("backToTop").style.display = "none";
-        juryBar.style.display = "flex";
-
-        if (fullEl.requestFullscreen) fullEl.requestFullscreen().catch(() => {});
-        presBtn.textContent = "⤺ Quitter";
-      }
-
-      function exitPresentation() {
-        presOn = false;
-
-        headerEl.style.display = "";
-        navEl.style.display = "";
-
-        requestAnimationFrame(() => {
-          headerEl.style.opacity = "1";
-          navEl.style.opacity = "1";
-          headerEl.style.transform = "none";
-          navEl.style.transform = "none";
-        });
-
-        document.querySelector(".progress-bar").style.display = "";
-        document.getElementById("backToTop").style.display = "";
-        juryBar.style.display = "none";
-
-        if (document.fullscreenElement && document.exitFullscreen)
-          document.exitFullscreen().catch(() => {});
-
-        presBtn.textContent = "🎤 Présentation";
-      }
-
-      function togglePresentation() {
-        presOn ? exitPresentation() : enterPresentation();
-      }
-
-      presBtn.addEventListener("click", togglePresentation, { passive: true });
-      juryPrev.addEventListener("click", () => navigate(-1), { passive: true });
-      juryNext.addEventListener("click", () => navigate(1), { passive: true });
-      juryQuit.addEventListener("click", exitPresentation, { passive: true });
-
-      window.addEventListener("keydown", (e) => {
-        if (!presOn) return;
-
-        if (e.key === "ArrowLeft") {
-          e.preventDefault();
-          navigate(-1);
-        }
-        if (e.key === "ArrowRight") {
-          e.preventDefault();
-          navigate(1);
-        }
-        if (e.key === "Escape") {
-          e.preventDefault();
-          exitPresentation();
-        }
-      });
-
-      // ========= Ripple sur mission cards et liens =========
-      document
-        .querySelectorAll(".mission-card, .welcome-links a, nav > ul > li > a")
-        .forEach((el) => {
-          el.addEventListener("click", addRipple, { passive: true });
-        });
-
-      // ========= Initialisation de la CARTE (Leaflet) =========
-      (function initMap() {
-        const el = document.getElementById("map-cf");
-        if (!el) return;
-
-        const cf = [48.8638, 2.3376];
-
-        const map = L.map(el, {
-          zoomControl: true,
-          scrollWheelZoom: false,
-          attributionControl: true,
-        }).setView(cf, 16);
-
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-          maxZoom: 19,
-          attribution: "&copy; OpenStreetMap contributors",
-        }).addTo(map);
-
-        const marker = L.marker(cf).addTo(map);
-        marker
-          .bindPopup("<b>Comédie-Française</b><br>1 Pl. Colette, 75001 Paris")
-          .openPopup();
-
-        const observer = new MutationObserver(() => {
-          map.invalidateSize(false);
-        });
-        observer.observe(document.getElementById("presentation_entreprise"), {
-          attributes: true,
-          attributeFilter: ["class"],
-        });
-
-        window.addEventListener("resize", () => map.invalidateSize(false), {
-          passive: true,
-        });
-      })();
-    </script>
-  </body>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ROLEX — Excellence Absolue</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+/* =========================
+   VARIABLES GLOBALES
+========================= */
+:root{
+  --gold:#d4af37;
+  --gold-soft:#e6c76b;
+  --dark:#0b0b0f;
+  --panel:#121218;
+  --panel-soft:#181820;
+  --text:#f4f4f7;
+  --muted:#a9a9b3;
+  --transition:0.6s cubic-bezier(.19,1,.22,1);
+}
+
+/* =========================
+   RESET
+========================= */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--dark);
+  color:var(--text);
+  overflow-x:hidden;
+}
+
+/* =========================
+   LOADER INTRO
+========================= */
+#loader{
+  position:fixed;
+  inset:0;
+  background:black;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+  flex-direction:column;
+  transition:1s ease;
+}
+
+#loader h1{
+  font-family:'Playfair Display',serif;
+  font-size:50px;
+  letter-spacing:.4em;
+  background:linear-gradient(135deg,var(--gold),var(--gold-soft));
+  -webkit-background-clip:text;
+  color:transparent;
+}
+
+.loader-bar{
+  width:200px;
+  height:2px;
+  background:#333;
+  margin-top:20px;
+  overflow:hidden;
+}
+
+.loader-progress{
+  height:100%;
+  width:0%;
+  background:var(--gold);
+  animation:loading 3s forwards;
+}
+
+@keyframes loading{
+  to{width:100%}
+}
+
+/* =========================
+   NAVBAR
+========================= */
+nav{
+  position:fixed;
+  width:100%;
+  padding:25px 80px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  z-index:1000;
+  transition:var(--transition);
+}
+
+nav.scrolled{
+  background:rgba(0,0,0,.9);
+  backdrop-filter:blur(12px);
+}
+
+nav a{
+  color:white;
+  text-decoration:none;
+  margin-left:35px;
+  font-size:14px;
+  letter-spacing:.1em;
+  transition:.3s;
+}
+
+nav a:hover{
+  color:var(--gold);
+}
+
+/* =========================
+   HERO VIDEO
+========================= */
+.hero{
+  height:100vh;
+  position:relative;
+  overflow:hidden;
+}
+
+.hero video{
+  position:absolute;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.hero::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.65);
+}
+
+.hero-content{
+  position:relative;
+  z-index:2;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+}
+
+.hero h1{
+  font-family:'Playfair Display',serif;
+  font-size:80px;
+  letter-spacing:.3em;
+  background:linear-gradient(135deg,var(--gold),var(--gold-soft));
+  -webkit-background-clip:text;
+  color:transparent;
+}
+
+.hero p{
+  margin-top:25px;
+  font-size:20px;
+  color:var(--muted);
+}
+
+/* =========================
+   SECTIONS GENERALES
+========================= */
+.section{
+  padding:160px 10%;
+  position:relative;
+  opacity:0;
+  transform:translateY(80px);
+  transition:1s ease;
+}
+
+.section.visible{
+  opacity:1;
+  transform:translateY(0);
+}
+
+.section h2{
+  font-family:'Playfair Display',serif;
+  font-size:42px;
+  text-align:center;
+  margin-bottom:90px;
+}
+
+/* =========================
+   LIGHT FOLLOW EFFECT
+========================= */
+.light{
+  position:fixed;
+  width:500px;
+  height:500px;
+  pointer-events:none;
+  background:radial-gradient(circle, rgba(212,175,55,0.15) 0%, transparent 60%);
+  transform:translate(-50%,-50%);
+  z-index:0;
+}
+
+/* =========================
+   COLLECTION GRID
+========================= */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+  gap:60px;
+}
+
+.card{
+  background:var(--panel);
+  border-radius:20px;
+  overflow:hidden;
+  transition:var(--transition);
+  position:relative;
+}
+
+.card:hover{
+  transform:translateY(-20px) scale(1.02);
+}
+
+.card img{
+  width:100%;
+  height:380px;
+  object-fit:cover;
+}
+
+.card-content{
+  padding:30px;
+}
+
+.card-content h3{
+  margin-bottom:15px;
+  font-size:22px;
+}
+
+.card-content p{
+  color:var(--muted);
+  line-height:1.7;
+}
+
+/* =========================
+   PARALLAX SECTION
+========================= */
+.parallax{
+  height:600px;
+  background:url("move.png") center/cover fixed;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.parallax h2{
+  font-size:50px;
+  background:rgba(0,0,0,.7);
+  padding:40px 60px;
+  border-radius:10px;
+}
+
+/* =========================
+   TIMELINE
+========================= */
+.timeline{
+  max-width:900px;
+  margin:auto;
+  border-left:2px solid var(--gold);
+  padding-left:50px;
+}
+
+.timeline-item{
+  margin-bottom:60px;
+}
+
+.timeline-item h4{
+  color:var(--gold);
+  font-size:20px;
+  margin-bottom:10px;
+}
+
+.timeline-item p{
+  color:var(--muted);
+  line-height:1.7;
+}
+
+/* =========================
+   FAQ
+========================= */
+.faq-item{
+  margin-bottom:25px;
+  background:var(--panel-soft);
+  padding:25px;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+.faq-item h4{
+  margin-bottom:10px;
+}
+
+.faq-item p{
+  display:none;
+  color:var(--muted);
+}
+
+.faq-item.active p{
+  display:block;
+}
+
+/* =========================
+   CONTACT
+========================= */
+.contact{
+  text-align:center;
+}
+
+.contact input,.contact textarea{
+  width:100%;
+  max-width:600px;
+  margin:15px auto;
+  padding:18px;
+  border:none;
+  border-radius:8px;
+  background:var(--panel-soft);
+  color:white;
+}
+
+button{
+  margin-top:20px;
+  padding:15px 40px;
+  border:none;
+  border-radius:40px;
+  background:linear-gradient(135deg,var(--gold),var(--gold-soft));
+  font-weight:bold;
+  cursor:pointer;
+}
+
+/* =========================
+   FOOTER
+========================= */
+footer{
+  padding:80px 10%;
+  background:#09090c;
+  text-align:center;
+  color:var(--muted);
+  font-size:14px;
+}
+
+</style>
+</head>
+<body>
+
+<div id="loader">
+  <h1>ROLEX</h1>
+  <div class="loader-bar"><div class="loader-progress"></div></div>
+</div>
+
+<div class="light" id="light"></div>
+
+<nav id="navbar">
+  <div style="font-weight:bold;letter-spacing:.3em">ROLEX</div>
+  <div>
+    <a href="#histoire">Histoire</a>
+    <a href="#collection">Collection</a>
+    <a href="#heritage">Héritage</a>
+    <a href="#faq">FAQ</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <video autoplay muted loop>
+    <source src="https://cdn.coverr.co/videos/coverr-luxury-watch-5173/1080p.mp4" type="video/mp4">
+  </video>
+  <div class="hero-content">
+    <h1>ROLEX</h1>
+    <p>Perfection Horlogère • Innovation • Prestige</p>
+  </div>
+</section>
+
+<section id="histoire" class="section">
+<h2>Histoire & Excellence</h2>
+<p style="max-width:900px;margin:auto;text-align:center;color:var(--muted);line-height:1.8">
+Depuis 1905, Rolex incarne l’innovation horlogère. Chaque montre est conçue,
+développée et testée selon les standards les plus exigeants du monde.
+</p>
+</section>
+
+<div class="parallax">
+  <h2>Mouvement Perpétuel</h2>
+</div>
+
+<section id="collection" class="section">
+<h2>Collection Iconique</h2>
+<div class="grid">
+
+<div class="card">
+<img src="everose.png">
+<div class="card-content">
+<h3>Submariner</h3>
+<p>Étanche à 300 mètres, référence mondiale des montres de plongée.</p>
+</div>
+</div>
+
+<div class="card">
+<img src="dials.png">
+<div class="card-content">
+<h3>Daytona</h3>
+<p>Chronographe de légende dédié à la performance automobile.</p>
+</div>
+</div>
+
+<div class="card">
+<img src="Rolex bracelet.png">
+<div class="card-content">
+<h3>Datejust</h3>
+<p>Élégance intemporelle et précision certifiée.</p>
+</div>
+</div>
+
+<div class="card">
+<img src="Cyclope lens.png">
+<div class="card-content">
+<h3>GMT-Master II</h3>
+<p>Compagne des voyageurs internationaux.</p>
+</div>
+</div>
+
+</div>
+</section>
+
+<section id="heritage" class="section">
+<h2>Héritage</h2>
+<div class="timeline">
+
+<div class="timeline-item">
+<h4>1905</h4>
+<p>Création de la marque à Londres.</p>
+</div>
+
+<div class="timeline-item">
+<h4>1926</h4>
+<p>Première montre étanche Oyster.</p>
+</div>
+
+<div class="timeline-item">
+<h4>1953</h4>
+<p>Lancement de la Submariner.</p>
+</div>
+
+<div class="timeline-item">
+<h4>Aujourd’hui</h4>
+<p>Leader mondial incontesté de l’horlogerie de luxe.</p>
+</div>
+
+</div>
+</section>
+
+<section id="faq" class="section">
+<h2>Questions Fréquentes</h2>
+
+<div class="faq-item">
+<h4>Les montres Rolex sont-elles fabriquées en Suisse ?</h4>
+<p>Oui, chaque montre est intégralement produite en Suisse.</p>
+</div>
+
+<div class="faq-item">
+<h4>Quelle est la précision d’une Rolex ?</h4>
+<p>Certification Chronomètre Superlatif −2/+2 secondes par jour.</p>
+</div>
+
+<div class="faq-item">
+<h4>Les montres sont-elles étanches ?</h4>
+<p>Chaque modèle possède un niveau d’étanchéité spécifique.</p>
+</div>
+
+</section>
+
+<section id="contact" class="section contact">
+<h2>Contact</h2>
+<input type="text" placeholder="Nom">
+<input type="email" placeholder="Email">
+<textarea rows="6" placeholder="Message"></textarea>
+<button>Envoyer</button>
+</section>
+
+<footer>
+© 2026 Projet Présentation Rolex — Danis GOUEDART & Yohan DO CAO
+</footer>
+
+<script>
+
+/* LOADER */
+window.addEventListener("load",()=>{
+  setTimeout(()=>{
+    document.getElementById("loader").style.opacity="0";
+    setTimeout(()=>{document.getElementById("loader").style.display="none"},1000);
+  },3000);
+});
+
+/* NAV SCROLL */
+window.addEventListener("scroll",()=>{
+  document.getElementById("navbar").classList.toggle("scrolled",window.scrollY>50);
+});
+
+/* SCROLL ANIMATION */
+const sections=document.querySelectorAll(".section");
+window.addEventListener("scroll",()=>{
+  sections.forEach(sec=>{
+    if(sec.getBoundingClientRect().top<window.innerHeight-100){
+      sec.classList.add("visible");
+    }
+  });
+});
+
+/* LIGHT FOLLOW */
+document.addEventListener("mousemove",e=>{
+  const light=document.getElementById("light");
+  light.style.left=e.clientX+"px";
+  light.style.top=e.clientY+"px";
+});
+
+/* FAQ */
+document.querySelectorAll(".faq-item").forEach(item=>{
+  item.addEventListener("click",()=>{
+    item.classList.toggle("active");
+  });
+});
+
+</script>
+
+</body>
 </html>
